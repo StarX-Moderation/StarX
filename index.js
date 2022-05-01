@@ -54,4 +54,3 @@ process.on('unhandledRejection', err => {
     console.log('Unknown error occured:\n')
     console.log(err)
 })
-.listen(process.env.PORT || 5000)
