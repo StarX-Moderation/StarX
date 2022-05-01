@@ -10,6 +10,8 @@ const Discord = require('discord.js'),
 client.event = new Discord.Collection();
 client.commands = new Discord.Collection();
 client.logger = require("./Tools/Logger.js")
+client.emotes = require("./Tools/Emotes.json")
+client.gif = require(`./Tools/gif.json`)
 client.config = config;
 
 client.Guild = require(`./Database/Schema/Guild.js`)

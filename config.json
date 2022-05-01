@@ -1,5 +1,6 @@
 {
     "token": "OTY5OTc0ODE2NjA4MjMxNDQ0.Ym1NcQ.bgzwMaawsjDclRWsYfONGpgXnCA",
     "mongoDB": "mongodb+srv://UtsavSaini:TVmoCSMuR1VSEpCl@cluster0.lzzmv.mongodb.net/Slick?retryWrites=true&w=majority",
-    "prefix":"="
+    "prefix":"=",
+    "supportserver": "https://discord.gg/T7TqPqVuaG"
 }

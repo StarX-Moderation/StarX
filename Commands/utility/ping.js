@@ -1,37 +1,45 @@
+const Discord = require("discord.js");
+
 module.exports = {
     name: "ping",
     usage: ["Get the current ping of the bot```{prefix}ping```"],
+    syntax: "ping",
     enabled: true,
     aliases: [],
-    category: "General",
+    category: "utility",
     memberPermissions: [],
-    botPermissions: [ "SEND_MESSAGES", "EMBED_LINKS" ],
+    botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
     //Settings for command
     nsfw: false,
     ownerOnly: false,
-    cooldown: 5000,
+    cooldown: 2000,
 
     // Execute contains content for the command
-    async execute(client, message, args){
-        try{
-
-            message.channel.send(`Pinging...`).then(async (m) => {
-                let latencyPing = Math.floor( m.createdTimestamp - message.createdTimestamp)
-                m.edit(`My Latency: \`${latencyPing}ms\`\nAPI Latency: \`${client.ws.ping}ms\``);
+    async execute(client, message, args, data) {
+        try {
+            const embed = new Discord.MessageEmbed()
+                .setTitle(`Pinging...`)
+                .setColor("BLUE")
+            message.channel.send({ embeds: [embed] }).then(async (m) => {
+                let latencyPing = Math.floor(m.createdTimestamp - message.createdTimestamp)
+                let colour = `RED`
+                if (latencyPing < 5000) colour = `GREEN`
+                const embed2 = new Discord.MessageEmbed()
+                    .setTitle(`🏓 Pong!`)
+                    .addField(`**API Latency**`, `\`${client.ws.ping}\``)
+                    .addField(`**Bot Latency**`, `\`${latencyPing}\``)
+                    .setColor(colour)
+                m.edit({ embeds: [embed2] });
             });
 
-        }catch(err){
+        } catch (err) {
             client.logger.error(`Ran into an error while executing ${data.cmd.name}`)
             console.log(err)
-            return client.embed.send(message, {
-                description: `An issue has occured while running the command. If this error keeps occuring please contact our development team.`,
-                color: `RED`,
-                author: {
-                    name: `Uh Oh!`,
-                    icon_url: `${message.author.displayAvatarURL()}`,
-                    url: "",
-                }
-            });
+            const errorembed = new Discord.MessageEmbed()
+                .setAuthor({ name: `Uh Oh!`, iconURL: client.gif.error })
+                .setColor(`RED`)
+                .setDescription(`An issue has occured while running the command. If this error keeps occuring please contact in [support server](${client.config.supportserver})`)
+            return message.channel.send({ embeds: [errorembed] });
         }
     }
 }
