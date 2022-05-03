@@ -28,10 +28,10 @@ module.exports = {
                 .setDescription(`Current prefix in this server is \`${guild.prefix}\`.\nYou can use \`${guild.prefix}prefix [new prefix]\` to change it!`)
                 .setColor(`#00FFFF`)
             if (!args[0]) {
-                return message.reply({content: guild.prefix, embeds: [embed], allowedMentions: { repliedUser: true } })
+                return message.reply({ content: guild.prefix, embeds: [embed], allowedMentions: { repliedUser: true } })
             } else {
                 if (args[0]) {
-                    if (!message.member.permissions.has('MANAGE_GUILD')){
+                    if (!message.member.permissions.has('MANAGE_GUILD')) {
                         const embed7 = new Discord.MessageEmbed()
                             .setAuthor({ name: `Permission Missing`, iconURL: client.gif.error })
                             .setDescription(`You need \`Manage Server\` permission to change prefix.`)
@@ -110,7 +110,7 @@ module.exports = {
                 .setAuthor({ name: `Uh Oh!`, iconURL: client.gif.error })
                 .setColor(`RED`)
                 .setDescription(`An issue has occured while running the command. If this error keeps occuring please contact in [support server](${client.config.supportserver})`)
-
+            return message.reply({ embeds: [errorembed] })
         }
 
 

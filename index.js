@@ -4,8 +4,9 @@ const Discord = require('discord.js'),
     util = require('util'),
     config = require('./config.json'),
     readdir = util.promisify(fs.readdir),
-    client = new Discord.Client({ intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_VOICE_STATES', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'] });
+    client = new Discord.Client({ intents: ['GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILDS', 'GUILD_MEMBERS', 'GUILD_VOICE_STATES', 'GUILD_MESSAGES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS'], partials: ['USER', 'REACTION', 'MESSAGE', 'GUILD_MEMBER', 'GUILD_SCHEDULED_EVENT', 'CHANNEL'] });
 
+    const {AmariBot} = require("amaribot.js")
 // Adding to the client
 client.event = new Discord.Collection();
 client.commands = new Discord.Collection();
@@ -13,9 +14,10 @@ client.logger = require("./Tools/Logger.js")
 client.emotes = require("./Tools/Emotes.json")
 client.gif = require(`./Tools/gif.json`)
 client.config = config;
-
+client.embeds = require(`./Tools/Embeds.js`)
+client.tools = require(`./Tools/Tools.js`)
 client.Guild = require(`./Database/Schema/Guild.js`)
-
+client.amari = new AmariBot(config.amariapi)
 
 async function init() {
     // Load Discordjs Events

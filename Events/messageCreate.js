@@ -89,6 +89,7 @@ module.exports = async (client, message) => {
         //Get the user database
         let data = {};
         data.cmd = cmd;
+        data.prefix = prefix
         data.config = config;
         //Execute the command and log the user in console
         cmd.execute(client, message, args, data);

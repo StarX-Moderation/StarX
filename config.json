@@ -2,5 +2,6 @@
     "token": "OTY5OTc0ODE2NjA4MjMxNDQ0.Ym1NcQ.bgzwMaawsjDclRWsYfONGpgXnCA",
     "mongoDB": "mongodb+srv://UtsavSaini:TVmoCSMuR1VSEpCl@cluster0.lzzmv.mongodb.net/Slick?retryWrites=true&w=majority",
     "prefix":"=",
-    "supportserver": "https://discord.gg/T7TqPqVuaG"
+    "supportserver": "https://discord.gg/T7TqPqVuaG",
+    "amariapi":"c9f2b42857bccf3b5792eb2c.7ced7f.50db3ba70a0772077d496d71560"
 }
