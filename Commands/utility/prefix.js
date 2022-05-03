@@ -28,7 +28,7 @@ module.exports = {
                 .setDescription(`Current prefix in this server is \`${guild.prefix}\`.\nYou can use \`${guild.prefix}prefix [new prefix]\` to change it!`)
                 .setColor(`#00FFFF`)
             if (!args[0]) {
-                return message.reply({ content: guild.prefix, embeds: [embed], allowedMentions: { repliedUser: true } })
+                return message.reply({ embeds: [embed], allowedMentions: { repliedUser: true } })
             } else {
                 if (args[0]) {
                     if (!message.member.permissions.has('MANAGE_GUILD')) {
