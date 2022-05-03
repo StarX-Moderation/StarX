@@ -214,7 +214,7 @@ module.exports = {
                                 .setColor("YELLOW")
                         }
                         await i.update({ embeds: [embed3], components: [rowdisabled], allowedMentions: { repliedUser: true } }).then(err => {
-                            const filter2 = m => m.author.id = message.author.id
+                            const filter2 = m => m.author.id === message.author.id
 
                             const collector2 = message.channel.createMessageCollector({ filter2, time: 15000 });
 
