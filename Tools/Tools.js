@@ -51,16 +51,14 @@ module.exports.giveawayreqcheck = async function (member, requirement, giveaway)
             const { AmariBot } = require("amaribot.js")
             const amaribot = new AmariBot(config.amariapi)
             let time = db.fetch(`amari_giveaway_requirement_time_${guilddata.id}`)
-            if (time - Date.now() < 0) {
+            if (!time || time < Date.now()) {
                 const e = await amaribot.getRawGuildLeaderboard(member.guild.id)
-                console.log(e)
                 let newtime = Date.now() + 20000
                 db.set(`amari_giveaway_requirement_${guilddata.id}`, newtime)
                 db.set(`amari_giveaway_requirement_${guilddata.id}`, e.data)
-
             }
             let guildamari = db.fetch(`amari_giveaway_requirement_${guilddata.id}`)
-            let useramari = guildamari.get(member.user.id)
+            let useramari = guildamari.find(r => r.id === member.user.id)
             const embed4 = new Discord.MessageEmbed()
                 .setAuthor({ name: `Error` })
                 .setDescription(`An error occured while fetching your amari level. If this error keeps on occuring, report in the support server`)
@@ -68,14 +66,44 @@ module.exports.giveawayreqcheck = async function (member, requirement, giveaway)
             if (!useramari) return { bool: false, embed: embed4 }
             else {
                 const requiredamari = requirement.find(r => r.type === `Required Amari Level`)
-                if (useramari < requiredamari.required) {
+                if (useramari.level < parseInt(requiredamari.required)) {
                     const embed5 = new Discord.MessageEmbed()
                         .setColor("RED")
                         .setAuthor({ name: `Giveaway Requirement not met`, iconURL: "./Tools/gif.json".error })
-                        .setDescription(`You cannot join this giveaway.\nYou need \`${requiredamari.required}\` weekly amari to join this giveaway.`)
+                        .setDescription(`You cannot join this giveaway.\nYou need \`${requiredamari.required}\` amari level to join this giveaway.`)
                     return { bool: false, embed: embed5 }
                 }
             }
+        }
+        if (requirement.find(r => r.type === `Required Weekly Amari`)) {
+            const config = require("./../config.json");
+            const { AmariBot } = require("amaribot.js")
+            const amaribot = new AmariBot(config.amariapi)
+            let time = db.fetch(`weekly_amari_giveaway_requirement_time_${guilddata.id}`)
+            if (!time || time < Date.now()) {
+                const e = await amaribot.getRawWeeklyLeaderboard(member.guild.id)
+                let newtime = Date.now() + 20000
+                db.set(`weekly_amari_giveaway_requirement_${guilddata.id}`, newtime)
+                db.set(`weekly_amari_giveaway_requirement_${guilddata.id}`, e.data)
+            }
+            let guildamari = db.fetch(`weekly_amari_giveaway_requirement_${guilddata.id}`)
+            let useramari = guildamari.find(r => r.id === member.user.id)
+            const embed4 = new Discord.MessageEmbed()
+                .setAuthor({ name: `Error` })
+                .setDescription(`An error occured while fetching your weekly amari. If this error keeps on occuring, report in the support server`)
+                .setColor("RED")
+            if (!useramari) return { bool: false, embed: embed4 }
+            else {
+                const requiredamari = requirement.find(r => r.type === `Required Weekly Amari`)
+                if (useramari.exp < parseInt(requiredamari.required)) {
+                    const embed5 = new Discord.MessageEmbed()
+                        .setColor("RED")
+                        .setAuthor({ name: `Giveaway Requirement not met`, iconURL: "./Tools/gif.json".error })
+                        .setDescription(`You cannot join this giveaway.\nYou need \`${requiredamari.required}\` weekly to join this giveaway.`)
+                    return { bool: false, embed: embed5 }
+                }
+            }
+
         }
     }
     return { bool: true, embed: embed }
@@ -93,24 +121,25 @@ module.exports.endgiveaway = async function (client, giveawayid) {
     let emoji = client.emojis.cache.get(emojidata)
     if (!emoji) emoji = client.emojis.cache.find(e => client.emotes.tada.includes(e.id))
     let reaction = new Discord.Collection()
-    if (guild.giveaway.medium === `reaction`) reaction = message.reactions.cache.get(emoji.id).users.cache.filter(user => user.id === client.user.id).map(r => r.id)
-    reaction.forEach(e => giveaway.requirement.push(e))
-
-    console.log(giveaway.participant)
+    if (guild.giveaway.medium === `reaction`) {
+        reaction = message.reactions.cache.get(emoji.id).users.cache.filter(user => user.id === client.user.id).map(r => r.id)
+        reaction.forEach(e => giveaway.requirement.push(e))
+    }
     if (!giveaway) return { type: `Error`, answer: `No Giveaway with that Message` }
     else {
+
         let participants = giveaway.participant
         let numberofwinners = giveaway.numberofwinners
 
         var index = Math.floor(Math.random() * participants.length)
         var winners = [];
         if (participants.length === 0) return { type: `Success`, answer: `No one` }
-        if (numberofwinners < participants.length) return { type: `Success`, answer: participants.map(x => `<@${x.id}`) }
-        for (var i = 0; i < numberofwinners; i++) {
-            if (!winners.includes(index)) winners.push(peopleReacted[index]);
+        if (numberofwinners >= participants.length) {return { type: `Success`, answer: participants.map(x => `<@${x}>`) }}
+        for (var i = 0; i <= numberofwinners; i++) {
+            if (!winners.includes(participants[index])) winners.push(participants[index]);
             else i--;
         }
-        return { type: `Success`, answer: winners.map(x => `<@${x.id}>`) }
+        return { type: `Success`, answer: winners.map(x => `<@${x}>`) }
     }
 }
 

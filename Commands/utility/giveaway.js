@@ -28,10 +28,6 @@ module.exports = {
     async execute(client, message, args, data) {
 
         let guild = await Guild.findOne({ id: message.guild.id })
-        let emojidata = guild.giveaway.emote
-        let rolesdata = guild.giveaway.roles
-        let alwaysallowedrolesdata = guild.giveaway.alwaysallowedroles
-        let blacklistedrolesdata = guild.giveaway.blacklistedroles
         let medium = guild.giveaway.medium
         //No Arguement embed
         const embed = new Discord.MessageEmbed()
@@ -216,7 +212,7 @@ module.exports = {
                         await i.update({ embeds: [embed3], components: [rowdisabled], allowedMentions: { repliedUser: true } }).then(err => {
                             const filter2 = m => m.author.id === message.author.id
 
-                            const collector2 = message.channel.createMessageCollector(filter2, {time: 15000 });
+                            const collector2 = message.channel.createMessageCollector(filter2, { time: 15000 });
 
                             collector2.on('collect', async msgcollect => {
 
@@ -401,7 +397,7 @@ module.exports = {
                         let numberofwinners = parseInt(args[2])
                         let prize = args.slice(4).join(` `)
 
-                        let requirementarray = []
+                        const requirementarray = []
 
                         if (args[3].split(`;`).length > 5) {
                             const embed3 = new Discord.MessageEmbed()
@@ -410,17 +406,26 @@ module.exports = {
                                 .setColor(`RED`)
                             return message.reply({ embeds: [embed3] })
                         }
-                        args[3].split(`;`).forEach(r => {
-
+                        for (const r of args[3].split(`;`)) {
                             let ast = r.split(`:`)
-                            if (!ast[1] && ast[0].toLowerCase() !== `none`) return requirementarray.push(`Error`)
+                            if (!ast[1] && ast[0].toLowerCase() !== `none`) requirementarray.push(`Error`)
                             if (ast[0].toLowerCase() === `amari` || ast[0].toLowerCase() === `amarilvl`) {
-                                if(!message.guild.members.cache.get(`339254240012664832`)) return requirementarray.push(`ErrorAmari`)
-                                requirementarray.push({ type: `Required Amari Level`, required: parseInt(ast[1] || 0) })
+
+                                let guildmembers = await message.guild.members.fetch()
+                                if (!guildmembers.get(`339254240012664832`)) requirementarray.push(`ErrorAmari`)
+                                else {
+                                    if (guildmembers.get(`339254240012664832`)) {
+                                        requirementarray.push({ type: `Required Amari Level`, required: parseInt(ast[1] || 0) })
+                                    }
+                                }
                             }
                             if (ast[0].toLowerCase() === `weekly` || ast[0].toLowerCase() === `weeklyamari`) {
-                                if(!message.guild.members.cache.get(`339254240012664832`)) return requirementarray.push(`ErrorAmari`)
-                                requirementarray.push({ type: `Required Weekly Amari`, required: parseInt(ast[1] || 0) })
+                                let guildmembers = await message.guild.members.fetch()
+
+                                if (!guildmembers.get(`339254240012664832`)) requirementarray.push(`ErrorAmari`)
+                                else {
+                                    requirementarray.push({ type: `Required Weekly Amari`, required: parseInt(ast[1] || 0) })
+                                }
                             }
                             if (ast[0].toLowerCase() === `role`) {
                                 const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.toLowerCase()) || ast[1].toLowerCase().includes(r.id))
@@ -443,8 +448,7 @@ module.exports = {
                                     requirementarray.push({ type: `Blacklisted Role`, required: role.id })
                                 }
                             }
-                        })
-
+                        }
                         if (requirementarray.includes(`Error`)) {
                             const embed5 = new Discord.MessageEmbed()
                                 .setAuthor({ name: `Error`, iconURL: client.gif.error })
@@ -454,16 +458,16 @@ module.exports = {
                         }
                         if (requirementarray.includes(`ErrorAmari`)) {
                             const embed6 = new Discord.MessageEmbed()
-                            .setAuthor({name: `Amari Bot Missing`, iconURL: client.gif.error})
-                            .setDescription(`You cannot make amari requirement without having Amari Bot in the server.`)
-                            .setColor("RED")
-                            return message.reply({embeds: [embed6]})
+                                .setAuthor({ name: `Amari Bot Missing`, iconURL: client.gif.error })
+                                .setDescription(`You cannot make amari requirement without having Amari Bot in the server.`)
+                                .setColor("RED")
+                            return message.reply({ embeds: [embed6] })
                         }
 
                         let result = ``
                         let requirement = []
 
-                        let requirementtype = await requirementarray.map(x => x.type).filter(function (item, pos, self) {
+                        let requirementtype = requirementarray.map(x => x.type).filter(function (item, pos, self) {
                             return self.indexOf(item) == pos;
                         });
 
@@ -471,9 +475,9 @@ module.exports = {
                             let requirementobj = requirementtype[i];
                             let commands = ``
                             if (requirementobj === `Required Role` || requirementobj === `Bypass Role` || requirementobj === `Blacklisted Role`) {
-                                commands = await requirementarray.filter(x => x.type === requirementobj).map(x => `<@&${x.required}>`);
+                                commands = requirementarray.filter(x => x.type === requirementobj).map(x => `<@&${x.required}>`);
                             } else {
-                                commands = await requirementarray.filter(x => x.type === requirementobj).map(x => x.required)
+                                commands = requirementarray.filter(x => x.type === requirementobj).map(x => x.required)
                             }
                             let cmdText = commands.length < 1 ? "" : commands.join(", ");
                             let obj = {
@@ -496,19 +500,64 @@ module.exports = {
                             .setTimestamp(endingtime)
                             .setColor(`#00ffff`)
 
-                        const button = new Discord.MessageButton()
-                            .setEmoji(emoji)
-                            .setStyle("PRIMARY")
-                            .setCustomId(`Giveaway_Joining_${message.channel.id}`)
-
-                        const row = new Discord.MessageActionRow()
-                            .addComponents(button)
 
                         function sendgiveaway() {
                             if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway!__** ${client.emotes.tada}`, embeds: [embed9] }
                             else {
                                 return { content: `${client.emotes.tada} **__Giveaway!__** ${client.emotes.tada}`, embeds: [embed9] }
                             }
+                        }
+                        function endinterval(remainingtime, m, gw) {
+                            setTimeout(async () => {
+
+                                const row2 = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                            .setLabel(`Giveaway Link`)
+                                            .setStyle("LINK")
+                                            .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                        new Discord.MessageButton()
+                                            .setLabel(`Reroll`)
+                                            .setStyle("PRIMARY")
+                                            .setCustomId(`Giveaway_Reroll_${m.id}`)
+                                    )
+                                let e = await client.tools.endgiveaway(client, m.id)
+                                if (e.type === `Error`) return
+                                if (e.answer === `No one`) {
+                                    m.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
+                                } else {
+                                    m.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                                }
+                                const embed9 = new Discord.MessageEmbed()
+                                    .setTitle(`**${prize}**`)
+                                    .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
+                                    .setFooter({ text: `Ended at` })
+                                    .setTimestamp(endingtime)
+                                    .setColor(`#00ffff`)
+                                const button2 = new Discord.MessageButton()
+                                    .setEmoji(emoji)
+                                    .setStyle("PRIMARY")
+                                    .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+                                    .setDisabled(true)
+                                    .setCustomId(`Giveaway_Joining_${m.id}`)
+
+                                const row = new Discord.MessageActionRow()
+                                    .addComponents(button2)
+
+
+                                function sendgiveaway() {
+                                    if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
+                                    else {
+                                        return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
+                                    }
+                                }
+
+                                m.edit(sendgiveaway())
+                                await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
+
+                            }, remainingtime);
+
+
                         }
                         return message.channel.send(sendgiveaway()).then(async m => {
                             await message.delete()
@@ -527,15 +576,25 @@ module.exports = {
                                 m.edit({ components: [row2] })
                             }
                             let messageid = m.id
-                            await Giveaway.create({ id: m.id, guild: m.guild.id, channel: m.channel.id, host: message.author.id, time: time, endingtime: endingtime, winners: numberofwinners, prize: prize, requirement: requirementarray })
+                            let remainingtime = endingtime - Date.now()
+
+                            await Giveaway.create({ id: m.id, guild: m.guild.id, channel: m.channel.id, host: message.author.id, time: time, endingtime: endingtime, numberofwinners: numberofwinners, prize: prize, requirement: requirementarray })
+                            if (remainingtime <= 10000) {
+                                let gw = await Giveaway.findOne({id: m.id})
+                                console.log(gw)
+                                endinterval(remainingtime, m, gw)
+                            } else {
+
                             let interval = setInterval(async () => {
                                 let remainingtime = endingtime - Date.now()
+
+                                let Giveaway = require("./../../Database/Schema/Giveaway.js")
                                 if (!m) {
                                     await Giveaway.findOneAndDelete({ id: messageid })
                                     return clearInterval(interval)
                                 }
-
                                 if (remainingtime <= 0) {
+
                                     const row2 = new Discord.MessageActionRow()
                                         .addComponents(
                                             new Discord.MessageButton()
@@ -551,14 +610,50 @@ module.exports = {
                                     if (e.type === `Error`) return clearInterval(interval)
                                     if (e.answer === `No one`) {
                                         clearInterval(interval)
-                                        return m.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
+                                        m.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
                                     } else {
-                                        let last = e.answer.pop()
-                                        m.reply({ content: `Congratulations ${e.answer.join(`, `) + `and ` + last}! You won the giveaway for **${prize}**`, components: [row2] })
-                                        return clearInterval(interval)
+                                        m.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                                        clearInterval(interval)
                                     }
+                                    let gw = await Guild.findOne({id: m.id})
+                                    const embed9 = new Discord.MessageEmbed()
+                                        .setTitle(`**${prize}**`)
+                                        .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
+                                        .setFooter({ text: `Ended at` })
+                                        .setTimestamp(endingtime)
+                                        .setColor(`#00ffff`)
+
+                                    const button2 = new Discord.MessageButton()
+                                        .setEmoji(emoji)
+                                        .setStyle("PRIMARY")
+                                        .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+                                        .setDisabled(true)
+                                        .setCustomId(`Giveaway_Joining_${m.id}`)
+
+                                    const row = new Discord.MessageActionRow()
+                                        .addComponents(button2)
+
+
+                                    function sendgiveaway() {
+                                        if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
+                                        else {
+                                            return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
+                                        }
+                                    }
+                                    m.edit(sendgiveaway())
+
+                                    await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
+
                                 }
+                                if (remainingtime <= 10000) {
+                                    let gw = await Giveaway.findOne({ id: m.id.toString() })
+                                    console.log(gw)
+                                    clearInterval(interval)
+                                    endinterval(remainingtime, m, gw)
+                                }
+
                                 if (remainingtime > 0) {
+                                    let gw = await Giveaway.findOne({id: m.id})
                                     const embed9 = new Discord.MessageEmbed()
                                         .setTitle(`**${prize}**`)
                                         .setDescription(`Click on ${emoji} to participate!\nTime: ${client.tools.prettyMilliseconds(remainingtime, { verbose: true, secondsDecimalDigits: 0 })}\nHost: <@${message.author.id}>${requirement.length < 1 ? `` : `\n${requirement.map(x => `${x.type}: ${x.required}`).join(`\n`)}`}`)
@@ -569,6 +664,7 @@ module.exports = {
                                     const button = new Discord.MessageButton()
                                         .setEmoji(emoji)
                                         .setStyle("PRIMARY")
+                                        .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
                                         .setCustomId(`Giveaway_Joining_${m.id}`)
 
                                     const row = new Discord.MessageActionRow()
@@ -583,7 +679,8 @@ module.exports = {
                                     }
                                     m.edit(sendgiveaway())
                                 }
-                            }, 2000);
+                            }, 10000);
+                        }
                         })
                     }
                 }
