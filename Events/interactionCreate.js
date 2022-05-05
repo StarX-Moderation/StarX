@@ -5,12 +5,13 @@ const Guild = require("../Database/Schema/Guild");
 module.exports = async (client, i) => {
     if (i.customId.startsWith(`Giveaway_`)) {
         if (i.customId.startsWith(`Giveaway_End_`)) {
+            let m = i.customId.replace(`Giveaway_End_`, ``)
             const row2 = new Discord.MessageActionRow()
                 .addComponents(
                     new Discord.MessageButton()
                         .setLabel(`Giveaway Link`)
                         .setStyle("LINK")
-                        .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                        .setURL(`https://discord.com/channels/${m.guild}/${m.channel}/${m.id}`),
                     new Discord.MessageButton()
                         .setLabel(`Reroll`)
                         .setStyle("PRIMARY")
@@ -21,22 +22,22 @@ module.exports = async (client, i) => {
                     new Discord.MessageButton()
                         .setLabel(`Giveaway Link`)
                         .setStyle("LINK")
-                        .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                        .setURL(`https://discord.com/channels/${m.guild}/${m.channel}/${m.id}`),
                 )
 
             let e = await client.tools.endgiveaway(client, m.id)
             if (e.type === `Error`) return clearInterval(interval)
             if (e.answer === `No one`) {
                 clearInterval(interval)
-                m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
+                i.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
             } else {
-                m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                i.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                 clearInterval(interval)
             }
-            let gw = await Guild.findOne({ id: m.id })
-            console.log(gw)
+            let gw = await Giveaway.findOne({ id: m.id })
+
             const embed9 = new Discord.MessageEmbed()
-                .setTitle(`**${prize}**`)
+                .setTitle(`**${gw.prize}**`)
                 .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
                 .setFooter({ text: `Ended at` })
                 .setTimestamp(endingtime)
@@ -52,14 +53,15 @@ module.exports = async (client, i) => {
             const row = new Discord.MessageActionRow()
                 .addComponents(button2)
 
-
+            let messages = i.channel.messages.fetch()
+            let message = messages.find(r => r.id === m.id )
             function sendgiveaway() {
                 if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
                 else {
                     return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
                 }
             }
-            m.edit(sendgiveaway())
+            message.edit(sendgiveaway())
 
             await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
 
@@ -321,11 +323,11 @@ module.exports = async (client, i) => {
                         const endbutton = new Discord.MessageButton()
                         .setLabel(`End`)
                         .setStyle(`DANGER`)
-                        .setCustomId(`Giveaway_End_${m.id}`)
+                        .setCustomId(`Giveaway_End_${giveaway.id}`)
                     const entrybutton = new Discord.MessageButton()
                         .setLabel(`Entries`)
                         .setStyle(`PRIMARY`)
-                        .setCustomId(`Giveaway_Entries_${m.id}`)
+                        .setCustomId(`Giveaway_Entries_${giveaway.id}`)
 
                     const row2 = new Discord.MessageActionRow()
                         .addComponents(button2, entrybutton, endbutton)

@@ -646,8 +646,8 @@ module.exports = {
                                             m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                                             clearInterval(interval)
                                         }
-                                        let gw = await Guild.findOne({ id: m.id })
-                                        console.log(gw)
+                                        let gw = await Giveaway.findOne({ id: m.id })
+
                                         const embed9 = new Discord.MessageEmbed()
                                             .setTitle(`**${prize}**`)
                                             .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
