@@ -53,7 +53,7 @@ module.exports = async (client, i) => {
             const row = new Discord.MessageActionRow()
                 .addComponents(button2)
 
-            let message = i.channel.messages.fetch(m.id).catch(err => message = undefined)
+            let message = await i.channel.messages.fetch(m.id).catch(err => message = undefined)
             function sendgiveaway() {
                 if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
                 else {
