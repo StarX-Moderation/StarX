@@ -680,7 +680,7 @@ module.exports = {
                                     if (remainingtime <= 10000) {
                                         let gw = await Giveaway.findOne({ id: m.id.toString() })
                                         clearInterval(interval)
-                                        endinterval(remainingtime, m, gw)
+                                        endinterval(remainingtime, m)
                                     }
 
                                     if (remainingtime > 0) {
