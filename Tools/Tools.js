@@ -110,14 +110,17 @@ module.exports.giveawayreqcheck = async function (member, requirement, giveaway)
 }
 
 
-module.exports.endgiveaway = async function (client, giveawayid) {
+module.exports.endgiveaway = async function (client, giveawayid, message) {
     let giveaway = await Giveaway.findOne({ id: giveawayid })
     let guild = await Guild.findOne({ id: giveaway.guild })
     let guildid = client.guilds.cache.get(giveaway.guild)
     let channel = guildid.channels.cache.get(giveaway.channel)
     let messages = await channel.messages.fetch()
-    let message = messages.find(r => r.id === giveawayid)
-    if(!message) return {type: `Error`, answer: `Giveaway Deleted`}
+    if (!message) {
+        message = messages.get(giveawayid)
+    }
+    console.log(messages)
+    if (!message) return { type: `Error`, answer: `Giveaway Deleted` }
     let emojidata = guild.giveaway.emote
     let emoji = client.emojis.cache.get(emojidata)
     if (!emoji) emoji = client.emojis.cache.find(e => client.emotes.tada.includes(e.id))
@@ -131,13 +134,13 @@ module.exports.endgiveaway = async function (client, giveawayid) {
 
         let participants = giveaway.participant
         let numberofwinners = giveaway.numberofwinners
-        if(giveaway.ended === true) numberofwinners = 1
-        
+        if (giveaway.ended === true) numberofwinners = 1
+
 
         var index = Math.floor(Math.random() * participants.length)
         var winners = [];
         if (participants.length === 0) return { type: `Success`, answer: `No one` }
-        if (numberofwinners >= participants.length) {return { type: `Success`, answer: participants.map(x => `<@${x}>`) }}
+        if (numberofwinners >= participants.length) { return { type: `Success`, answer: participants.map(x => `<@${x}>`) } }
         for (var i = 0; i <= numberofwinners; i++) {
             if (!winners.includes(participants[index])) winners.push(participants[index]);
             else i--;

@@ -528,7 +528,7 @@ module.exports = {
                                             .setStyle("LINK")
                                             .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                     )
-                                let e = await client.tools.endgiveaway(client, m.id)
+                                let e = await client.tools.endgiveaway(client, m.id, m)
                                 if (e.type === `Error`) return
                                 if (e.answer === `No one`) {
                                     m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
@@ -637,7 +637,7 @@ module.exports = {
                                                     .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                             )
 
-                                        let e = await client.tools.endgiveaway(client, m.id)
+                                        let e = await client.tools.endgiveaway(client, m.id, m)
                                         if (e.type === `Error`) return clearInterval(interval)
                                         if (e.answer === `No one`) {
                                             clearInterval(interval)
