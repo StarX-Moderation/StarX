@@ -126,7 +126,7 @@ module.exports = async (client, i) => {
                     let rr = 0
                     const embed = new Discord.MessageEmbed()
                         .setTitle(`Giveaway Entries`)
-                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${giveaway.participant.slice(0, 20).map(r => `\`${giveaway.participant.indexOf(r)}\` <@${r}>`).join(`\n`)}`)
+                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${giveaway.participant.slice(0, 20).map(r => `\`${giveaway.participant.indexOf(r)+1}\` <@${r}>`).join(`\n`)}`)
                         .setColor(`#00ffff`)
                     i.reply({ embeds: [embed], components: [row], ephemeral: true }).then(r => {
                         const filter = m => m.member.id === i.member.id
@@ -146,7 +146,7 @@ module.exports = async (client, i) => {
                                 if (!entriespage[rr + 1]) {
                                     const embed = new Discord.MessageEmbed()
                                         .setTitle(`Giveaway Entries`)
-                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)}\` <@${r}>`).join(`\n`)}`)
+                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)+1}\` <@${r}>`).join(`\n`)}`)
                                         .setColor(`#00ffff`)
 
                                     return m.update({ embeds: [embed], components: [row3] })
@@ -158,7 +158,7 @@ module.exports = async (client, i) => {
                                 if (entriespage[rr - 1]) {
                                     const embed = new Discord.MessageEmbed()
                                         .setTitle(`Giveaway Entries`)
-                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)}\` <@${r}>`).join(`\n`)}`)
+                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)+1}\` <@${r}>`).join(`\n`)}`)
                                         .setColor(`#00ffff`)
 
                                     return m.update({ embeds: [embed], components: [row2] })
@@ -166,7 +166,7 @@ module.exports = async (client, i) => {
                                 if (!entriespage[rr - 1]) {
                                     const embed = new Discord.MessageEmbed()
                                         .setTitle(`Giveaway Entries`)
-                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)}\` <@${r}>`).join(`\n`)}`)
+                                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${entriespage[rr].map(r => `\`${giveaway.participant.indexOf(r)+1}\` <@${r}>`).join(`\n`)}`)
                                         .setColor(`#00ffff`)
 
                                     return m.update({ embeds: [embed], components: [row] })
@@ -248,7 +248,7 @@ module.exports = async (client, i) => {
                     .setTitle(`You have not joined this giveaway`)
                     .setDescription(`You cannot leave a giveaway which you haven't joined`)
                     .setColor("RED")
-                return i.reply({ embeds: [embed] })
+                return i.reply({ embeds: [embed], ephemeral: true })
 
             } else {
                 const button = new Discord.MessageButton()
