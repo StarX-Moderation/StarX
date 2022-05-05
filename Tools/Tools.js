@@ -115,11 +115,9 @@ module.exports.endgiveaway = async function (client, giveawayid, message) {
     let guild = await Guild.findOne({ id: giveaway.guild })
     let guildid = client.guilds.cache.get(giveaway.guild)
     let channel = guildid.channels.cache.get(giveaway.channel)
-    let messages = await channel.messages.fetch()
     if (!message) {
-        message = messages.get(giveawayid)
+        message = await channel.messages.fetch(giveawayid)
     }
-    console.log(messages)
     if (!message) return { type: `Error`, answer: `Giveaway Deleted` }
     let emojidata = guild.giveaway.emote
     let emoji = client.emojis.cache.get(emojidata)

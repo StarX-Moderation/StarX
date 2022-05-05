@@ -53,8 +53,7 @@ module.exports = async (client, i) => {
             const row = new Discord.MessageActionRow()
                 .addComponents(button2)
 
-            let messages = i.channel.messages.fetch()
-            let message = messages.find(r => r.id === m.id )
+            let message = i.channel.messages.fetch(m.id).catch(err => message = undefined)
             function sendgiveaway() {
                 if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
                 else {
@@ -234,8 +233,7 @@ module.exports = async (client, i) => {
             console.log(ee)
             let giveaway = await Giveaway.findOne({ id: ee })
 
-            let channelmessage = await i.channel.messages.fetch()
-            let giveawaymessage = channelmessage.find(r => r.id === ee.toString())
+            let giveawaymessage = await i.channel.messages.fetch(ee).catch(err => giveawaymessage = undefined)
             if (!giveaway || giveaway.ended === true || !giveawaymessage) {
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`Giveaway Ended`)

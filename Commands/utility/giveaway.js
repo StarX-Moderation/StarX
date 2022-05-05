@@ -507,8 +507,8 @@ module.exports = {
                                 return { content: `${client.emotes.tada} **__Giveaway!__** ${client.emotes.tada}`, embeds: [embed9] }
                             }
                         }
-                        function endinterval(remainingtime, m) {
-                            setTimeout(async () => {
+                        async function endinterval (remainingtime, m) {
+                            await setTimeout(async () => {
                                 let gw = await Giveaway.findOne({ id: m.id })
                                 const row2 = new Discord.MessageActionRow()
                                     .addComponents(
@@ -528,7 +528,7 @@ module.exports = {
                                             .setStyle("LINK")
                                             .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                     )
-                                let e = await client.tools.endgiveaway(client, m.id, m)
+                                let e = await client.tools.endgiveaway(client, m.id, m).catch(err => console.log(err))
                                 if (e.type === `Error`) return
                                 if (e.answer === `No one`) {
                                     m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
@@ -606,7 +606,6 @@ module.exports = {
 
                                 let interval = setInterval(async () => {
                                     let remainingtime = endingtime - Date.now()
-
                                     let Giveaway = require("./../../Database/Schema/Giveaway.js")
                                     if (!m) {
                                         await Giveaway.findOneAndDelete({ id: messageid })
@@ -637,7 +636,7 @@ module.exports = {
                                                     .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                             )
 
-                                        let e = await client.tools.endgiveaway(client, m.id, m)
+                                        let e = await client.tools.endgiveaway(client, m.id, m).catch(err => console.log(Error))
                                         if (e.type === `Error`) return clearInterval(interval)
                                         if (e.answer === `No one`) {
                                             clearInterval(interval)
