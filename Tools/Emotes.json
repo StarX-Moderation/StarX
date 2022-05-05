@@ -1,6 +1,8 @@
 {
     "tick":"<:sl_Tick:915259605590867999>",
     "cross":"<:sl_Cross:915259720615493683>",
-    "tada":"<:sl_tada:970538833642934303>"
+    "tada":"<:sl_tada:970538833642934303>",
+    "nextarrow": "<a:sl_ForwardArrow:914862864509050901>",
+    "backarrow":"<a:sl_BackArrow:914863472033017896>"
     
 }

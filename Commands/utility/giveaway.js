@@ -509,7 +509,7 @@ module.exports = {
                         }
                         function endinterval(remainingtime, m) {
                             setTimeout(async () => {
-                                let gw = await Giveaway.findOne({id: m.id})
+                                let gw = await Giveaway.findOne({ id: m.id })
                                 const row2 = new Discord.MessageActionRow()
                                     .addComponents(
                                         new Discord.MessageButton()
@@ -521,12 +521,12 @@ module.exports = {
                                             .setStyle("PRIMARY")
                                             .setCustomId(`Giveaway_Reroll_${m.id}`)
                                     )
-                                    const row3 = new Discord.MessageActionRow()
+                                const row3 = new Discord.MessageActionRow()
                                     .addComponents(
                                         new Discord.MessageButton()
-                                        .setLabel(`Giveaway Link`)
-                                        .setStyle("LINK")
-                                        .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                            .setLabel(`Giveaway Link`)
+                                            .setStyle("LINK")
+                                            .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                     )
                                 let e = await client.tools.endgiveaway(client, m.id)
                                 if (e.type === `Error`) return
@@ -569,17 +569,31 @@ module.exports = {
                         return message.channel.send(sendgiveaway()).then(async m => {
                             await message.delete()
                             if (!m) return
+                            const endbutton = new Discord.MessageButton()
+                                .setLabel(`End`)
+                                .setStyle(`DANGER`)
+                                .setCustomId(`Giveaway_End_${m.id}`)
+                            const entrybutton = new Discord.MessageButton()
+                                .setLabel(`Entries`)
+                                .setStyle(`PRIMARY`)
+                                .setCustomId(`Giveaway_Entries_${m.id}`)
+
+                            const row20 = new Discord.MessageActionRow()
+                                .addComponents(endbutton, entrybutton)
+
                             const button2 = new Discord.MessageButton()
                                 .setEmoji(emoji)
                                 .setStyle("PRIMARY")
                                 .setCustomId(`Giveaway_Joining_${m.id}`)
 
                             const row2 = new Discord.MessageActionRow()
-                                .addComponents(button2)
+                                .addComponents(button2, entrybutton, endbutton)
 
 
-                            if (medium === `reaction`) m.react(emoji)
-                            else {
+                            if (medium === `reaction`) {
+                                m.react(emoji)
+                                m.edit({ components: [row20] })
+                            } else {
                                 m.edit({ components: [row2] })
                             }
                             let messageid = m.id
@@ -590,110 +604,122 @@ module.exports = {
                                 endinterval(remainingtime, m)
                             } else {
 
-                            let interval = setInterval(async () => {
-                                let remainingtime = endingtime - Date.now()
+                                let interval = setInterval(async () => {
+                                    let remainingtime = endingtime - Date.now()
 
-                                let Giveaway = require("./../../Database/Schema/Giveaway.js")
-                                if (!m) {
-                                    await Giveaway.findOneAndDelete({ id: messageid })
-                                    return clearInterval(interval)
-                                }
-                                if (remainingtime <= 0) {
+                                    let Giveaway = require("./../../Database/Schema/Giveaway.js")
+                                    if (!m) {
+                                        await Giveaway.findOneAndDelete({ id: messageid })
+                                        return clearInterval(interval)
+                                    }
+                                    let gw = await Giveaway.findOne({ id: m.id })
+                                    if (gw.ended === true) {
+                                        return clearInterval(interval)
+                                    }
+                                    if (remainingtime <= 0) {
 
-                                    const row2 = new Discord.MessageActionRow()
-                                        .addComponents(
-                                            new Discord.MessageButton()
-                                                .setLabel(`Giveaway Link`)
-                                                .setStyle("LINK")
-                                                .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
-                                            new Discord.MessageButton()
-                                                .setLabel(`Reroll`)
-                                                .setStyle("PRIMARY")
-                                                .setCustomId(`Giveaway_Reroll_${m.id}`)
-                                        )
+                                        const row2 = new Discord.MessageActionRow()
+                                            .addComponents(
+                                                new Discord.MessageButton()
+                                                    .setLabel(`Giveaway Link`)
+                                                    .setStyle("LINK")
+                                                    .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                                new Discord.MessageButton()
+                                                    .setLabel(`Reroll`)
+                                                    .setStyle("PRIMARY")
+                                                    .setCustomId(`Giveaway_Reroll_${m.id}`)
+                                            )
                                         const row3 = new Discord.MessageActionRow()
-                                        .addComponents(
-                                            new Discord.MessageButton()
-                                            .setLabel(`Giveaway Link`)
-                                            .setStyle("LINK")
-                                            .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
-                                        )
-    
-                                    let e = await client.tools.endgiveaway(client, m.id)
-                                    if (e.type === `Error`) return clearInterval(interval)
-                                    if (e.answer === `No one`) {
-                                        clearInterval(interval)
-                                        m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
-                                    } else {
-                                        m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
-                                        clearInterval(interval)
-                                    }
-                                    let gw = await Guild.findOne({id: m.id})
-                                    console.log(gw)
-                                    const embed9 = new Discord.MessageEmbed()
-                                        .setTitle(`**${prize}**`)
-                                        .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
-                                        .setFooter({ text: `Ended at` })
-                                        .setTimestamp(endingtime)
-                                        .setColor(`#00ffff`)
+                                            .addComponents(
+                                                new Discord.MessageButton()
+                                                    .setLabel(`Giveaway Link`)
+                                                    .setStyle("LINK")
+                                                    .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                            )
 
-                                    const button2 = new Discord.MessageButton()
-                                        .setEmoji(emoji)
-                                        .setStyle("PRIMARY")
-                                        .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
-                                        .setDisabled(true)
-                                        .setCustomId(`Giveaway_Joining_${m.id}`)
-
-                                    const row = new Discord.MessageActionRow()
-                                        .addComponents(button2)
-
-
-                                    function sendgiveaway() {
-                                        if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
-                                        else {
-                                            return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
+                                        let e = await client.tools.endgiveaway(client, m.id)
+                                        if (e.type === `Error`) return clearInterval(interval)
+                                        if (e.answer === `No one`) {
+                                            clearInterval(interval)
+                                            m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
+                                        } else {
+                                            m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                                            clearInterval(interval)
                                         }
-                                    }
-                                    m.edit(sendgiveaway())
+                                        let gw = await Guild.findOne({ id: m.id })
+                                        console.log(gw)
+                                        const embed9 = new Discord.MessageEmbed()
+                                            .setTitle(`**${prize}**`)
+                                            .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
+                                            .setFooter({ text: `Ended at` })
+                                            .setTimestamp(endingtime)
+                                            .setColor(`#00ffff`)
 
-                                    await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
+                                        const button2 = new Discord.MessageButton()
+                                            .setEmoji(emoji)
+                                            .setStyle("PRIMARY")
+                                            .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+                                            .setDisabled(true)
+                                            .setCustomId(`Giveaway_Joining_${m.id}`)
 
-                                }
-                                if (remainingtime <= 10000) {
-                                    let gw = await Giveaway.findOne({ id: m.id.toString() })
-                                    clearInterval(interval)
-                                    endinterval(remainingtime, m, gw)
-                                }
-
-                                if (remainingtime > 0) {
-                                    let gw = await Giveaway.findOne({id: m.id})
-                                    const embed9 = new Discord.MessageEmbed()
-                                        .setTitle(`**${prize}**`)
-                                        .setDescription(`Click on ${emoji} to participate!\nTime: ${client.tools.prettyMilliseconds(remainingtime, { verbose: true, secondsDecimalDigits: 0 })}\nHost: <@${message.author.id}>${requirement.length < 1 ? `` : `\n${requirement.map(x => `${x.type}: ${x.required}`).join(`\n`)}`}`)
-                                        .setFooter({ text: `Winners: ${numberofwinners} | Ends at` })
-                                        .setTimestamp(endingtime)
-                                        .setColor(`#00ffff`)
-
-                                    const button = new Discord.MessageButton()
-                                        .setEmoji(emoji)
-                                        .setStyle("PRIMARY")
-                                        .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
-                                        .setCustomId(`Giveaway_Joining_${m.id}`)
-
-                                    const row = new Discord.MessageActionRow()
-                                        .addComponents(button)
+                                        const row = new Discord.MessageActionRow()
+                                            .addComponents(button2)
 
 
-                                    function sendgiveaway() {
-                                        if (medium === `reaction`) return { embeds: [embed9] }
-                                        else {
-                                            return { embeds: [embed9], components: [row] }
+                                        function sendgiveaway() {
+                                            if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
+                                            else {
+                                                return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
+                                            }
                                         }
+                                        m.edit(sendgiveaway())
+
+                                        await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
+
                                     }
-                                    m.edit(sendgiveaway())
-                                }
-                            }, 10000);
-                        }
+                                    if (remainingtime <= 10000) {
+                                        let gw = await Giveaway.findOne({ id: m.id.toString() })
+                                        clearInterval(interval)
+                                        endinterval(remainingtime, m, gw)
+                                    }
+
+                                    if (remainingtime > 0) {
+                                        let gw = await Giveaway.findOne({ id: m.id })
+                                        const embed9 = new Discord.MessageEmbed()
+                                            .setTitle(`**${prize}**`)
+                                            .setDescription(`Click on ${emoji} to participate!\nTime: ${client.tools.prettyMilliseconds(remainingtime, { verbose: true, secondsDecimalDigits: 0 })}\nHost: <@${message.author.id}>${requirement.length < 1 ? `` : `\n${requirement.map(x => `${x.type}: ${x.required}`).join(`\n`)}`}`)
+                                            .setFooter({ text: `Winners: ${numberofwinners} | Ends at` })
+                                            .setTimestamp(endingtime)
+                                            .setColor(`#00ffff`)
+
+                                        const button = new Discord.MessageButton()
+                                            .setEmoji(emoji)
+                                            .setStyle("PRIMARY")
+                                            .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+                                            .setCustomId(`Giveaway_Joining_${m.id}`)
+                                            const endbutton = new Discord.MessageButton()
+                                            .setLabel(`End`)
+                                            .setStyle(`DANGER`)
+                                            .setCustomId(`Giveaway_End_${m.id}`)
+                                        const entrybutton = new Discord.MessageButton()
+                                            .setLabel(`Entries`)
+                                            .setStyle(`PRIMARY`)
+                                            .setCustomId(`Giveaway_Entries_${m.id}`)
+            
+                                        const row = new Discord.MessageActionRow()
+                                            .addComponents(button, entrybutton, endbutton)
+
+
+                                        function sendgiveaway() {
+                                            if (medium === `reaction`) return { embeds: [embed9] }
+                                            else {
+                                                return { embeds: [embed9], components: [row] }
+                                            }
+                                        }
+                                        m.edit(sendgiveaway())
+                                    }
+                                }, 10000);
+                            }
                         })
                     }
                 }
