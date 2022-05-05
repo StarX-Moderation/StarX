@@ -428,21 +428,21 @@ module.exports = {
                                 }
                             }
                             if (ast[0].toLowerCase() === `role`) {
-                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.toLowerCase()) || ast[1].toLowerCase().includes(r.id))
+                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.split(` `).join(``).toLowerCase()) || ast[1].toLowerCase().includes(r.id))
                                 if (!role) return requirementarray.push(`Error`)
                                 else {
                                     requirementarray.push({ type: `Required Role`, required: role.id })
                                 }
                             }
                             if (ast[0].toLowerCase() === `bypass` || ast[0].toLowerCase() === `bypassrole`) {
-                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.toLowerCase()) || ast[1].toLowerCase().includes(r.id))
+                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.split(` `).join(``).toLowerCase()) || ast[1].toLowerCase().includes(r.id))
                                 if (!role) return requirementarray.push(`Error`)
                                 else {
                                     requirementarray.push({ type: `Bypass Role`, required: role.id })
                                 }
                             }
                             if (ast[0].toLowerCase() === `blacklist` || ast[0].toLowerCase() === `blacklistrole`) {
-                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.toLowerCase()) || ast[1].toLowerCase().includes(r.id))
+                                const role = message.guild.roles.cache.find(r => ast[1].toLowerCase().includes(r.name.split(` `).join(``).toLowerCase()) || ast[1].toLowerCase().includes(r.id))
                                 if (!role) return requirementarray.push(`Error`)
                                 else {
                                     requirementarray.push({ type: `Blacklisted Role`, required: role.id })
@@ -507,9 +507,9 @@ module.exports = {
                                 return { content: `${client.emotes.tada} **__Giveaway!__** ${client.emotes.tada}`, embeds: [embed9] }
                             }
                         }
-                        function endinterval(remainingtime, m, gw) {
+                        function endinterval(remainingtime, m) {
                             setTimeout(async () => {
-
+                                let gw = await Giveaway.findOne({id: m.id})
                                 const row2 = new Discord.MessageActionRow()
                                     .addComponents(
                                         new Discord.MessageButton()
@@ -521,12 +521,19 @@ module.exports = {
                                             .setStyle("PRIMARY")
                                             .setCustomId(`Giveaway_Reroll_${m.id}`)
                                     )
+                                    const row3 = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                        .setLabel(`Giveaway Link`)
+                                        .setStyle("LINK")
+                                        .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                    )
                                 let e = await client.tools.endgiveaway(client, m.id)
                                 if (e.type === `Error`) return
                                 if (e.answer === `No one`) {
-                                    m.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
+                                    m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
                                 } else {
-                                    m.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                                    m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                                 }
                                 const embed9 = new Discord.MessageEmbed()
                                     .setTitle(`**${prize}**`)
@@ -580,9 +587,7 @@ module.exports = {
 
                             await Giveaway.create({ id: m.id, guild: m.guild.id, channel: m.channel.id, host: message.author.id, time: time, endingtime: endingtime, numberofwinners: numberofwinners, prize: prize, requirement: requirementarray })
                             if (remainingtime <= 10000) {
-                                let gw = await Giveaway.findOne({id: m.id})
-                                console.log(gw)
-                                endinterval(remainingtime, m, gw)
+                                endinterval(remainingtime, m)
                             } else {
 
                             let interval = setInterval(async () => {
@@ -606,16 +611,25 @@ module.exports = {
                                                 .setStyle("PRIMARY")
                                                 .setCustomId(`Giveaway_Reroll_${m.id}`)
                                         )
+                                        const row3 = new Discord.MessageActionRow()
+                                        .addComponents(
+                                            new Discord.MessageButton()
+                                            .setLabel(`Giveaway Link`)
+                                            .setStyle("LINK")
+                                            .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
+                                        )
+    
                                     let e = await client.tools.endgiveaway(client, m.id)
                                     if (e.type === `Error`) return clearInterval(interval)
                                     if (e.answer === `No one`) {
                                         clearInterval(interval)
-                                        m.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
+                                        m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
                                     } else {
-                                        m.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+                                        m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                                         clearInterval(interval)
                                     }
                                     let gw = await Guild.findOne({id: m.id})
+                                    console.log(gw)
                                     const embed9 = new Discord.MessageEmbed()
                                         .setTitle(`**${prize}**`)
                                         .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
@@ -647,7 +661,6 @@ module.exports = {
                                 }
                                 if (remainingtime <= 10000) {
                                     let gw = await Giveaway.findOne({ id: m.id.toString() })
-                                    console.log(gw)
                                     clearInterval(interval)
                                     endinterval(remainingtime, m, gw)
                                 }

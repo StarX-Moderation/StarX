@@ -115,8 +115,9 @@ module.exports.endgiveaway = async function (client, giveawayid) {
     let guild = await Guild.findOne({ id: giveaway.guild })
     let guildid = client.guilds.cache.get(giveaway.guild)
     let channel = guildid.channels.cache.get(giveaway.channel)
-    let message = channel.messages.cache.get(giveawayid)
-
+    let messages = await channel.messages.fetch()
+    let message = messages.find(r => r.id === giveawayid)
+    if(!message) return {type: `Error`, answer: `Giveaway Deleted`}
     let emojidata = guild.giveaway.emote
     let emoji = client.emojis.cache.get(emojidata)
     if (!emoji) emoji = client.emojis.cache.find(e => client.emotes.tada.includes(e.id))
@@ -130,6 +131,8 @@ module.exports.endgiveaway = async function (client, giveawayid) {
 
         let participants = giveaway.participant
         let numberofwinners = giveaway.numberofwinners
+        if(giveaway.ended === true) numberofwinners = 1
+        
 
         var index = Math.floor(Math.random() * participants.length)
         var winners = [];
