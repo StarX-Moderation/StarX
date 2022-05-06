@@ -5,7 +5,8 @@ const Guild = require("../Database/Schema/Guild");
 module.exports = async (client, i) => {
     if (i.customId.startsWith(`Giveaway_`)) {
         if (i.customId.startsWith(`Giveaway_End_`)) {
-            let m = i.customId.replace(`Giveaway_End_`, ``)
+            let rr = i.customId.replace(`Giveaway_End_`, ``)
+            let m = await Giveaway.findOne({id: rr})
             const row2 = new Discord.MessageActionRow()
                 .addComponents(
                     new Discord.MessageButton()
@@ -26,34 +27,35 @@ module.exports = async (client, i) => {
                 )
 
             let e = await client.tools.endgiveaway(client, m.id)
-            if (e.type === `Error`) return clearInterval(interval)
+            console.log(e)
+            if (e.type === `Error`) return
             if (e.answer === `No one`) {
-                clearInterval(interval)
-                i.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
+                i.reply({ content: `No one participated in the Giveaway for **${m.prize}**`, components: [row3] })
             } else {
-                i.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
-                clearInterval(interval)
+                i.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${m.prize}**`, components: [row2] })
             }
             let gw = await Giveaway.findOne({ id: m.id })
 
             const embed9 = new Discord.MessageEmbed()
                 .setTitle(`**${gw.prize}**`)
-                .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${message.author.id}>`)
+                .setDescription(`Giveaway Ended!\nWinners: ${e.answer === `No one` ? `No one` : e.answer.join(`, `)}\nHost: <@${m.host}>`)
                 .setFooter({ text: `Ended at` })
-                .setTimestamp(endingtime)
+                .setTimestamp(m.endingtime)
                 .setColor(`#00ffff`)
 
+            let message = await i.channel.messages.fetch(m.id).catch(err => message = undefined)
             const button2 = new Discord.MessageButton()
-                .setEmoji(emoji)
-                .setStyle("PRIMARY")
-                .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
-                .setDisabled(true)
-                .setCustomId(`Giveaway_Joining_${m.id}`)
+            .setEmoji(message.components[0].components[0].emoji)
+            .setStyle("PRIMARY")
+            .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+            .setDisabled(true)
+            .setCustomId(`Giveaway_Joining_${m.id}`)
 
             const row = new Discord.MessageActionRow()
-                .addComponents(button2)
+            .addComponents(button2)
+            let guild = await Guild.findOne({id: i.guild.id})
+            let medium = guild.giveaway.medium
 
-            let message = await i.channel.messages.fetch(m.id).catch(err => message = undefined)
             function sendgiveaway() {
                 if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
                 else {

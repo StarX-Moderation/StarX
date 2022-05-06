@@ -118,7 +118,6 @@ module.exports.endgiveaway = async function (client, giveawayid, message) {
     if (!message) {
         message = await channel.messages.fetch(giveawayid)
     }
-    console.log(message)
     if (!message) return { type: `Error`, answer: `Giveaway Deleted` }
     let emojidata = guild.giveaway.emote
     let emoji = client.emojis.cache.get(emojidata)
@@ -134,16 +133,16 @@ module.exports.endgiveaway = async function (client, giveawayid, message) {
         let participants = giveaway.participant
         let numberofwinners = giveaway.numberofwinners
         if (giveaway.ended === true) numberofwinners = 1
+        var index = Math.floor(Math.random()*participants.length)
 
-
-        var index = Math.floor(Math.random() * participants.length)
-        var winners = [];
+        let winners = [];
         if (participants.length === 0) return { type: `Success`, answer: `No one` }
-        if (numberofwinners >= participants.length) { return { type: `Success`, answer: participants.map(x => `<@${x}>`) } }
-        for (var i = 0; i <= numberofwinners; i++) {
+        if (numberofwinners >= participants.length) {console.log(`ee`); return { type: `Success`, answer: participants.map(x => `<@${x}>`) } }
+        for (var h = 0; h < numberofwinners; h++) {
             if (!winners.includes(participants[index])) winners.push(participants[index]);
-            else i--;
+            else h--;
         }
+        console.log(winners)
         return { type: `Success`, answer: winners.map(x => `<@${x}>`) }
     }
 }

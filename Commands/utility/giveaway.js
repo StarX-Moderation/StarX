@@ -508,7 +508,7 @@ module.exports = {
                             }
                         }
                         async function endinterval (remainingtime, m) {
-                            await setTimeout(async () => {
+                            setTimeout(async () => {
                                 let gw = await Giveaway.findOne({ id: m.id })
                                 const row2 = new Discord.MessageActionRow()
                                     .addComponents(
@@ -639,11 +639,9 @@ module.exports = {
                                         let e = await client.tools.endgiveaway(client, m.id, m).catch(err => console.log(err))
                                         if (e.type === `Error`) return clearInterval(interval)
                                         if (e.answer === `No one`) {
-                                            clearInterval(interval)
                                             m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
                                         } else {
                                             m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
-                                            clearInterval(interval)
                                         }
                                         let gw = await Giveaway.findOne({ id: m.id })
 
@@ -672,14 +670,14 @@ module.exports = {
                                             }
                                         }
                                         m.edit(sendgiveaway())
-
                                         await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
+                                        clearInterval(interval)
 
                                     }
                                     if (remainingtime <= 10000) {
-                                        let gw = await Giveaway.findOne({ id: m.id.toString() })
-                                        clearInterval(interval)
                                         endinterval(remainingtime, m)
+                                        clearInterval(interval)
+
                                     }
 
                                     if (remainingtime > 0) {
