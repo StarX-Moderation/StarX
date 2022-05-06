@@ -92,7 +92,6 @@ module.exports = async (client, i) => {
                 )
 
             let e = await client.tools.endgiveaway(client, m.id)
-            console.log(e)
             if (e.type === `Error`) return
             if (e.answer === `No one`) {
                 i.reply({ content: `No one participated in the Giveaway for **${m.prize}**`, components: [row3] })
@@ -309,7 +308,6 @@ module.exports = async (client, i) => {
         //Leave Giveaway
         if (i.customId.startsWith(`Giveaway_Leave_`)) {
             let ee = i.customId.replace(`Giveaway_Leave_`, ``)
-            console.log(ee)
             let giveaway = await Giveaway.findOne({ id: ee })
 
             let giveawaymessage = await i.channel.messages.fetch(ee).catch(err => giveawaymessage = undefined)
@@ -380,7 +378,6 @@ module.exports = async (client, i) => {
                     .setStyle("DANGER")
                 const row = new Discord.MessageActionRow()
                     .addComponents(button)
-                console.log(giveaway.participant)
 
                 return i.reply({ embeds: [embed], components: [row], ephemeral: true })
             } else {

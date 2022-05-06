@@ -193,10 +193,10 @@ module.exports = async(client) => {
             if (remainingtime > 0) {
                 let gw = await Giveaway.findOne({ id: m.id })
                 const embed9 = new Discord.MessageEmbed()
-                    .setTitle(`**${prize}**`)
+                    .setTitle(`**${gw.prize}**`)
                     .setDescription(`Click on ${emoji} to participate!\nTime: ${client.tools.prettyMilliseconds(remainingtime, { verbose: true, secondsDecimalDigits: 0 })}\nHost: <@${g.host}>${requirement.length < 1 ? `` : `\n${requirement.map(x => `${x.type}: ${x.required}`).join(`\n`)}`}`)
-                    .setFooter({ text: `Winners: ${numberofwinners} | Ends at` })
-                    .setTimestamp(endingtime)
+                    .setFooter({ text: `Winners: ${gw.numberofwinners} | Ends at` })
+                    .setTimestamp(gw.endingtime)
                     .setColor(`#00ffff`)
 
                 const button = new Discord.MessageButton()
