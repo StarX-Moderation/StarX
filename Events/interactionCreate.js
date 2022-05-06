@@ -79,7 +79,7 @@ module.exports = async (client, i) => {
                 if (giveaway.participant.length <= 20) {
                     const embed3 = new Discord.MessageEmbed()
                         .setTitle(`Giveaway Entries`)
-                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${giveaway.participant.map(r => `\`${giveaway.participant.indexOf(r)}\` <@${r}>`).join(`\n`)}`)
+                        .setDescription(`Number of Entries: \`${giveaway.participant.length}\`\n\n**Entries**:\n${giveaway.participant.map(r => `\`${giveaway.participant.indexOf(r)+1}\` <@${r}>`).join(`\n`)}`)
                         .setColor(`#00ffff`)
                     return i.reply({ embeds: [embed3], ephemeral: true })
                 }
