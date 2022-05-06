@@ -18,6 +18,7 @@ module.exports = {
     category: "utility",
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
+    subcommands: [{name: `start`, description: `Starts a giveaway`, usage: `start [time] [no. of winners] [requirement] [prize]`}, {name: `end`, description: `Ends a giveaway early`, usage: `end [giveaway ID]`}, {name: `reroll`, description: `Reroll winners of a giveaway`, usage: `reroll [giveaway ID]`}, {name: `cancel`, description: `Cancels a giveaway`, usage: `cancel [giveaway ID]`}, {name: `list`, description: `Shows list of active giveaways in the server`, usage: `list` }, {name: `entries`, description: `Check entries of any giveaway`, usage: `entries [giveaway ID]`}, {name: `ping`, description: `Ping the giveaway ping role of the server`, usage: `ping <sponsor> <message>`}],
     //Settings for command
     nsfw: false,
     ownerOnly: false,
