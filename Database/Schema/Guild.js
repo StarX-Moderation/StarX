@@ -15,5 +15,7 @@ module.exports = mongoose.model("Guild", new mongoose.Schema({
         pingrole: 'none'
         }
     },
+    raffle: {type: Array, default: []},
+
 
 }));

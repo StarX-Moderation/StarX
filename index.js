@@ -4,9 +4,11 @@ const Discord = require('discord.js'),
     util = require('util'),
     config = require('./config.json'),
     readdir = util.promisify(fs.readdir),
-    client = new Discord.Client({ intents: ['GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILDS', 'GUILD_VOICE_STATES', 'GUILD_MESSAGES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'GUILD_MEMBERS'], partials: ['USER', 'REACTION', 'MESSAGE', 'GUILD_SCHEDULED_EVENT', 'CHANNEL'] });
+    client = new Discord.Client({ intents: [32767, 'GUILD_BANS', 'GUILD_EMOJIS_AND_STICKERS', 'GUILD_INVITES', 'GUILDS', 'GUILD_VOICE_STATES', 'GUILD_MESSAGES', 'DIRECT_MESSAGES', 'GUILD_MESSAGE_REACTIONS', 'GUILD_MEMBERS'], partials: ['USER', 'REACTION', 'MESSAGE', 'GUILD_SCHEDULED_EVENT', 'CHANNEL'] });
+const discordModals = require('discord-modals') // Define the discord-modals package!
+discordModals(client); // discord-modals needs your client in order to interact with modals
 
-    const {AmariBot} = require("amaribot.js")
+const { AmariBot } = require("amaribot.js")
 // Adding to the client
 client.event = new Discord.Collection();
 client.commands = new Discord.Collection();

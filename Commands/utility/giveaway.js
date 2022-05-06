@@ -183,7 +183,7 @@ module.exports = {
 
                     const filter = i => i.message.id === m.id && i.user.id === message.author.id
 
-                    const collector = message.channel.createMessageComponentCollector({ filter, idle: 30000 });
+                    const collector = await message.channel.createMessageComponentCollector({ filter, idle: 30000 });
 
                     collector.on('collect', async i => {
                         let guild = await Guild.findOne({ id: message.guild.id })
@@ -234,13 +234,14 @@ module.exports = {
                                 .setDescription(`Send role which you want to set as ping role for giveaways.\nYou can send ID/Name of role or mention it.`)
                                 .setColor("YELLOW")
                         }
-                        await i.update({ embeds: [embed3], components: [rowdisabled], allowedMentions: { repliedUser: true } }).then(err => {
-                            const filter2 = m => m.author.id === message.author.id
+                        await i.update({ embeds: [embed3], components: [rowdisabled], allowedMentions: { repliedUser: true } }).then(async err => {
+                            const filter2 = r => r.author.id === message.author.id
 
-                            const collector2 = message.channel.createMessageCollector({ filter2, idle: 15000, max: 5 });
+
+                            const collector2 = await message.channel.createMessageCollector({ filter2, idle: 15000, max: 5 });
 
                             collector2.on('collect', async msgcollect => {
-
+                                if (msgcollect.author.id !== message.author.id) return
                                 if (i.values[0] === `gw_setting_emoji`) {
                                     let requiredemoji = client.emojis.cache.find(e => msgcollect.content.includes(e.id))
                                     if (!requiredemoji) {
@@ -275,7 +276,7 @@ module.exports = {
                                         const embed4 = new Discord.MessageEmbed()
                                             .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
                                             .setTitle(`Giveaway Settings`)
-                                            .setDescription(`Ping role for this server's giveaways has been changed to <@&${requiredrole.id}>\nThis role will be pinged when you will use \`--ping\` in the giveaway command.`)
+                                            .setDescription(`Ping role for this server's giveaways has been changed to <@&${requiredrole.id}>.`)
                                             .setColor("GREEN")
                                         collector2.stop("done")
                                         await Guild.findOneAndUpdate({ id: msgcollect.guild.id }, { $set: { "giveaway.pingrole": requiredrole.id } })
@@ -428,6 +429,27 @@ module.exports = {
                 .setColor("RED")
             return message.reply({ embeds: [embed] })
         } else {
+            //Ping
+            if (args[0].toLowerCase() === `ping`) {
+                let pingrole = guild.giveaway.pingrole === `none`||!guild.giveaway.pingrole ? `` : `<@&${guild.giveaway.pingrole}>`
+                const embed2 = new Discord.MessageEmbed()
+                .setAuthor({name: `Error`, iconURL: client.gif.error})
+                .setDescription(`This server don't have any ping role for giveaways yet.\nYou can setup it by using \`${data.prefix}giveaway settings\``)
+                .setColor("RED")
+                if(!args[1]&&pingrole === ``) return message.reply({embeds: [embed2]})
+                if(!args[1]) return message.channel.send(`${pingrole}`)
+                let msg = args.slice(2).join(` `)
+                let role = message.guild.members.cache.find(r => args[1].includes(r.id))
+                if (!role) msg = args.slice(1).join(` `)
+                if(msg === ``) msg = `None`
+                const embed = new Discord.MessageEmbed()
+                    .setTitle(`**__Giveaway Time__**`)
+                    .setDescription(`${role ? `**Sponsor**: <@${role.id}>\n` : ``}**Message**: ${msg}`)
+                    .setColor(`#00ffff`)
+                    message.delete()
+                    return message.channel.send({content: pingrole, embeds: [embed]})
+
+            }
             //List
             if (args[0].toLowerCase() === `list`) {
                 const glist = await Giveaway.find({ guild: message.guild.id, ended: false })
@@ -440,7 +462,7 @@ module.exports = {
                         .setDescription(`Number of Giveaways running right now: \`${glist.length}\``)
                         .setColor(`#00ffff`)
                     glist.forEach(r => {
-                        embed3.addField(`${r.prize}`, `**Link**: [Click](https://discord.com/channels/${r.guild}/${r.channel}/${r.id})\n**ID**: ${r.id}\n**Ending Time**: <t:${Math.floor(r.endingtime/1000)}:R> (<t:${Math.round(r.endingtime/1000)}:F>)`)
+                        embed3.addField(`${r.prize}`, `**Link**: [Click](https://discord.com/channels/${r.guild}/${r.channel}/${r.id})\n**ID**: ${r.id}\n**Ending Time**: <t:${Math.floor(r.endingtime / 1000)}:R> (<t:${Math.round(r.endingtime / 1000)}:F>)`)
                     })
                     return message.reply({ embeds: [embed3] })
                 }
@@ -487,12 +509,12 @@ module.exports = {
                         .addComponents(backarrowdis, nextarrowdis)
                     let rr = 0
                     const embed3 = new Discord.MessageEmbed()
-                    .setTitle(`Giveaways in ${message.guild.name}`)
-                    .setDescription(`Number of Giveaways running right now: \`${glist.length}\``)
-                    .setColor(`#00ffff`)
+                        .setTitle(`Giveaways in ${message.guild.name}`)
+                        .setDescription(`Number of Giveaways running right now: \`${glist.length}\``)
+                        .setColor(`#00ffff`)
 
                     glist.slice(0, 5).forEach(r => {
-                        embed3.addField(`${r.prize}`, `**Link**: [Click](https://discord.com/channels/${r.guild}/${r.channel}/${r.id})\n**ID**: ${r.id}\n**Ending Time**: <t:${r.endingtime/1000}:R> (<t:${r.endingtime/1000}:F>)`)
+                        embed3.addField(`${r.prize}`, `**Link**: [Click](https://discord.com/channels/${r.guild}/${r.channel}/${r.id})\n**ID**: ${r.id}\n**Ending Time**: <t:${r.endingtime / 1000}:R> (<t:${r.endingtime / 1000}:F>)`)
 
                     })
                     const embed = new Discord.MessageEmbed()
@@ -700,32 +722,8 @@ module.exports = {
                         return message.reply({ embeds: [embed2] })
                     }
                     let numberofwinners = parseInt(args[2])
-                    let prize1 = args.slice(4).filter(r => !r.startsWith(`--`))
-                    let prize = prize1.join(` `)
+                    let prize = args.slice(4).join(` `)
 
-
-                    let flags = args.slice(4).filter(r => !r.startsWith(`--`))
-                    let flagarray2 = []
-                    flags.forEach(r => {
-                        let rr = r.replace(`--`, ``)
-                        let gg = rr.split(`:`)
-                        let flagname = gg[0].toLowerCase()
-                        let flagarguement = gg[1]
-                        let flagarray = ['ping', 'sponsor', `message`, `donator`]
-                        let flagdata = flagarray2.find(r => r.name === flagname)
-                        if (flagname !== `ping` && !flagarguement) {
-                            flagarray.push('NOARG')
-                        }
-                        if (flagname === `sponsor`)
-                            if (!flagarray.includes(flagname)) {
-                                flagarray2.push(`NOFLAG`)
-                            }
-                        if (flagdata) {
-                            if (flagname !== `ping`) {
-                                flagdata.arguement.push(flagarguement)
-                            }
-                        }
-                    })
 
 
                     const requirementarray = []
