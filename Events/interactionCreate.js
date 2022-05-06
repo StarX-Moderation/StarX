@@ -4,7 +4,72 @@ const Guild = require("../Database/Schema/Guild");
 
 module.exports = async (client, i) => {
     if (i.customId.startsWith(`Giveaway_`)) {
+        //Cancel Giveaway
+        if (i.customId.startsWith(`Giveaway_Cancel_`)) {
+            const guild = await Guild.findOne({ id: i.guild.id })
+            const giveawayrole = guild.giveaway.roles
+
+            if (i.member.permissions.has(`MANAGE_GUILD`) || i.member.roles.cache.find(r => giveawayrole.includes(r.id))) {
+
+            let rr = i.customId.replace(`Giveaway_Cancel_`, ``)
+            let m = await Giveaway.findOne({id: rr})
+            
+            let gw = m
+            const embed2 = new Discord.MessageEmbed()
+            .setTitle(`Error`)
+            .setDescription(`Cannot find that giveaway.`)
+            .setColor("RED")
+            if(!gw) return i.reply({embeds: [embed2], ephemeral: true })
+            const embed9 = new Discord.MessageEmbed()
+                .setTitle(`**${gw.prize}**`)
+                .setDescription(`Giveaway Cancelled!\nHost: <@${m.host}>`)
+                .setFooter({ text: `Cancelled at` })
+                .setTimestamp(Date.now())
+                .setColor(`#00ffff`)
+
+            let message = await i.channel.messages.fetch(m.id).catch(err => message = undefined)
+            const button2 = new Discord.MessageButton()
+            .setEmoji(message.components[0].components[0].emoji)
+            .setStyle("PRIMARY")
+            .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
+            .setDisabled(true)
+            .setCustomId(`Giveaway_Joining_${m.id}`)
+
+            const row = new Discord.MessageActionRow()
+            .addComponents(button2)
+            let guild = await Guild.findOne({id: i.guild.id})
+            let medium = guild.giveaway.medium
+
+            function sendgiveaway() {
+                if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Cancelled!__** ${client.emotes.tada}`, embeds: [embed9] }
+                else {
+                    return { content: `${client.emotes.tada} **__Giveaway Cancelled!__** ${client.emotes.tada}`, embeds: [embed9], components: [row] }
+                }
+            }
+            message.edit(sendgiveaway())
+            const embed = new Discord.MessageEmbed()
+            .setTitle(`Giveaway Cancelled`)
+            .setDescription(`The giveaway for prize: ${gw.prize} has been cancelled`)
+            .setColor("RED")
+            i.reply({embeds: [embed], ephemeral: true})
+            await Giveaway.findOneAndDelete({ id: m.id })
+        }else {
+            const embed = new Discord.MessageEmbed()
+                .setTitle(`Missing Permission`)
+                .setDescription(`You need \`Manage Server\` permission or giveaway manager roles of this server to check entries of giveaways`)
+                .setColor("RED")
+            return i.reply({ embeds: [embed], ephemeral: true })
+
+        }
+        }
+
+
         if (i.customId.startsWith(`Giveaway_End_`)) {
+            const guild = await Guild.findOne({ id: i.guild.id })
+            const giveawayrole = guild.giveaway.roles
+
+            if (i.member.permissions.has(`MANAGE_GUILD`) || i.member.roles.cache.find(r => giveawayrole.includes(r.id))) {
+
             let rr = i.customId.replace(`Giveaway_End_`, ``)
             let m = await Giveaway.findOne({id: rr})
             const row2 = new Discord.MessageActionRow()
@@ -69,7 +134,16 @@ module.exports = async (client, i) => {
 
             await Giveaway.findOneAndUpdate({ id: m.id }, { $set: { ended: true } })
 
+        }else {
+            const embed = new Discord.MessageEmbed()
+                .setTitle(`Missing Permission`)
+                .setDescription(`You need \`Manage Server\` permission or giveaway manager roles of this server to check entries of giveaways`)
+                .setColor("RED")
+            return i.reply({ embeds: [embed], ephemeral: true })
+
         }
+    }
+    //Entries of Giveaway
         if (i.customId.startsWith(`Giveaway_Entries_`)) {
             let ee = i.customId.replace(`Giveaway_Entries_`, ``)
             const guild = await Guild.findOne({ id: i.guild.id })
@@ -280,6 +354,8 @@ module.exports = async (client, i) => {
                 return i.reply({ embeds: [embed], ephemeral: true })
             }
         }
+
+
         //Join Giveaway
         if (i.customId.startsWith(`Giveaway_Joining_`)) {
             let e = i.customId.replace(`Giveaway_Joining_`, ``)

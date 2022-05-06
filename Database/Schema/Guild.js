@@ -12,7 +12,7 @@ module.exports = mongoose.model("Guild", new mongoose.Schema({
         medium: "button",
         alwaysallowedroles: [],
         blacklistedroles: [],
-        giveaways: []
+        pingrole: 'none'
         }
     },
 
