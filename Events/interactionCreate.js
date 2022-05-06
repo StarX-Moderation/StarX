@@ -50,9 +50,12 @@ module.exports = async (client, i) => {
             .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
             .setDisabled(true)
             .setCustomId(`Giveaway_Joining_${m.id}`)
-
+            const button3 = new Discord.MessageButton()
+            .setLabel(`Entries`)
+            .setStyle("PRIMARY")
+            .setCustomId(`Giveaway_Entries_${m.id}`)
             const row = new Discord.MessageActionRow()
-            .addComponents(button2)
+            .addComponents(button2, button3)
             let guild = await Guild.findOne({id: i.guild.id})
             let medium = guild.giveaway.medium
 

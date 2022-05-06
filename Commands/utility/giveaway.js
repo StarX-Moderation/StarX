@@ -507,7 +507,7 @@ module.exports = {
                                 return { content: `${client.emotes.tada} **__Giveaway!__** ${client.emotes.tada}`, embeds: [embed9] }
                             }
                         }
-                        async function endinterval (remainingtime, m) {
+                        async function endinterval(remainingtime, m) {
                             setTimeout(async () => {
                                 let gw = await Giveaway.findOne({ id: m.id })
                                 const row2 = new Discord.MessageActionRow()
@@ -548,8 +548,13 @@ module.exports = {
                                     .setDisabled(true)
                                     .setCustomId(`Giveaway_Joining_${m.id}`)
 
-                                const row = new Discord.MessageActionRow()
-                                    .addComponents(button2)
+                                    const button3 = new Discord.MessageButton()
+                                    .setLabel(`Entries`)
+                                    .setStyle("PRIMARY")
+                                    .setCustomId(`Giveaway_Entries_${m.id}`)
+                                    const row = new Discord.MessageActionRow()
+                                    .addComponents(button2, button3)
+                        
 
 
                                 function sendgiveaway() {
@@ -658,9 +663,12 @@ module.exports = {
                                             .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
                                             .setDisabled(true)
                                             .setCustomId(`Giveaway_Joining_${m.id}`)
-
+                                        const button3 = new Discord.MessageButton()
+                                            .setLabel(`Entries`)
+                                            .setStyle("PRIMARY")
+                                            .setCustomId(`Giveaway_Entries_${m.id}`)
                                         const row = new Discord.MessageActionRow()
-                                            .addComponents(button2)
+                                            .addComponents(button2, button3)
 
 
                                         function sendgiveaway() {
@@ -694,7 +702,7 @@ module.exports = {
                                             .setStyle("PRIMARY")
                                             .setLabel(gw.participant.length > 0 ? gw.participant.length.toString() : '')
                                             .setCustomId(`Giveaway_Joining_${m.id}`)
-                                            const endbutton = new Discord.MessageButton()
+                                        const endbutton = new Discord.MessageButton()
                                             .setLabel(`End`)
                                             .setStyle(`DANGER`)
                                             .setCustomId(`Giveaway_End_${m.id}`)
@@ -702,7 +710,7 @@ module.exports = {
                                             .setLabel(`Entries`)
                                             .setStyle(`PRIMARY`)
                                             .setCustomId(`Giveaway_Entries_${m.id}`)
-            
+
                                         const row = new Discord.MessageActionRow()
                                             .addComponents(button, entrybutton, endbutton)
 
