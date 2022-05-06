@@ -636,7 +636,7 @@ module.exports = {
                                                     .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`),
                                             )
 
-                                        let e = await client.tools.endgiveaway(client, m.id, m).catch(err => console.log(Error))
+                                        let e = await client.tools.endgiveaway(client, m.id, m).catch(err => console.log(err))
                                         if (e.type === `Error`) return clearInterval(interval)
                                         if (e.answer === `No one`) {
                                             clearInterval(interval)

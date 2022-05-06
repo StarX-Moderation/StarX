@@ -97,7 +97,7 @@ module.exports = async (client, message) => {
 
 
     } catch (err) {
-        console.error(err);
+        console.log(err);
     }
 
 };
