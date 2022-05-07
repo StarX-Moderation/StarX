@@ -117,7 +117,7 @@ module.exports = {
                         },
                         {
                             label: 'Ping Role',
-                            description: `Role to be pinged when --ping is used in the command.`,
+                            description: `Role to be pinged for Giveaways.`,
                             value: `gw_setting_pingrole`
                         }
                     ])
@@ -138,7 +138,7 @@ module.exports = {
                     let alwaysallowedrolesdata = guild.giveaway.alwaysallowedroles
                     let blacklistedrolesdata = guild.giveaway.blacklistedroles
                     let medium = guild.giveaway.medium
-                    let pingroledata = guild.giveaway.pingrole | `none`
+                    let pingroledata = guild.giveaway.pingrole
 
                     let emoji = client.emojis.cache.get(emojidata)
                     if (!emoji) emoji = client.emojis.cache.find(e => client.emotes.tada.includes(e.id))
@@ -167,7 +167,8 @@ module.exports = {
                     blacklistedroles = blacklistedrolesarray.map(r => `\`${r.name}\``).join(`, `)
                     if (!blacklistedroles || blacklistedroles === ``) blacklistedroles = `None`
 
-                    let pingrole = !pingroledata || pingroledata === `none` ? `None` : `<@&${pingroledata}>`
+                    let pingrole = `<@&${pingroledata}>`
+                    if(!pingroledata||pingroledata === `none`) pingrole = `None`
                     const embed2 = new Discord.MessageEmbed()
                         .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
                         .setTitle(`Giveaway Settings`)
@@ -266,7 +267,7 @@ module.exports = {
 
 
                                 if (i.values[0] === `gw_setting_pingrole`) {
-                                    let requiredrole = message.guild.roles.cache.find(e => msgcollect.content.split(` `).join(``).toLowerCase().includes(e.id || e.name.split(` `).join(``).toLowerCase()))
+                                    let requiredrole = message.guild.roles.cache.find(e => msgcollect.content.split(` `).join(``).toLowerCase().includes(e.id) || msgcollect.content.split(` `).join(``).toLowerCase().includes(e.name.split(` `).join(``).toLowerCase()))
                                     if (!requiredrole) {
                                         const embed4 = new Discord.MessageEmbed()
                                             .setAuthor({ name: `Error`, iconURL: client.gif.error })
