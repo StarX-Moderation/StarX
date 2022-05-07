@@ -21,7 +21,7 @@ client.tools = require(`./Tools/Tools.js`)
 client.Guild = require(`./Database/Schema/Guild.js`)
 client.amari = new AmariBot(config.amariapi)
 client.on('messageCreate', (message) => {
-    if(message.bot) return
+    if(message.author.bot) return
     let rr = message.content.split(` `)
     if(!message.channel.parent) return
     if(message.channel.parent.id !== `971626831109292102` && message.channel.parent.id !== `971563020927004784`) return
