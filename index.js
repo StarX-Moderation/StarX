@@ -32,7 +32,7 @@ client.on('messageCreate', (message) => {
         .setColor(`RED`)
         const embed2 = new Discord.MessageEmbed()
         .setAuthor({name: `Moderation Log`, iconURL: client.gif.error})
-        .setDescription(`Username: ${message.author.tag}\nChannel: <#${message.channel.id}>\nID: ${message.author.id}\nReason: Ad Shorter than 20 words`)
+        .setDescription(`**Username**: ${message.author.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${message.author.id}\n**Reason**: Ad Shorter than 20 words`)
         .setColor("RED")
         let channel = message.guild.channels.cache.get(`971619282150625300`)
         channel.send({embeds: [embed2]})
