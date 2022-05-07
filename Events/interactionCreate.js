@@ -76,6 +76,7 @@ module.exports = async (client, i) => {
             if(m.ended === true){
                 const embed10 = new Discord.MessageEmbed()
                 .setTitle(`Error`)
+                .setColor("00ffff")
                 .setDescription(`This giveaway has ended already`)
                 return i.reply({embeds: [embed10]})
             }
@@ -157,7 +158,7 @@ module.exports = async (client, i) => {
             if (i.member.permissions.has(`MANAGE_GUILD`) || i.member.roles.cache.find(r => giveawayrole.includes(r.id))) {
                 let giveaway = await Giveaway.findOne({ id: ee.toString() })
                 if (giveaway.participant.length === 0) {
-                    return i.reply({ content: `There are no entries for this giveaway yet.`, ephemeral: true })
+                    return i.reply({ content: `There are no entries in this giveaway.`, ephemeral: true })
                 }
                 if (giveaway.participant.length <= 20) {
                     const embed3 = new Discord.MessageEmbed()

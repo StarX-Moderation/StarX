@@ -134,12 +134,11 @@ module.exports.endgiveaway = async function (client, giveawayid, message) {
 
         let winners = [];
         if (participants.length === 0) return { type: `Success`, answer: `No one` }
-        if (numberofwinners >= participants.length) {console.log(`ee`); return { type: `Success`, answer: participants.map(x => `<@${x}>`) } }
+        if (numberofwinners >= participants.length) {return { type: `Success`, answer: participants.map(x => `<@${x}>`) } }
         for (var h = 0; h < numberofwinners; h++) {
             if (!winners.includes(participants[index])) winners.push(participants[index]);
             else h--;
         }
-        console.log(winners)
         return { type: `Success`, answer: winners.map(x => `<@${x}>`) }
     }
 }
