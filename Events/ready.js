@@ -89,7 +89,7 @@ module.exports = async(client) => {
             if (remainingtime <= 10000) {
                 endinterval(remainingtime, m)
             } else {    
-        setInterval(async () => {
+        let interval = setInterval(async () => {
             let remainingtime = g.endingtime - Date.now()
             if (!m) {
                 await Giveaway.findOneAndDelete({ id: g.id })

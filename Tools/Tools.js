@@ -123,10 +123,7 @@ module.exports.endgiveaway = async function (client, giveawayid, message) {
     let emoji = client.emojis.cache.get(emojidata)
     if (!emoji) emoji = client.emojis.cache.find(e => client.emotes.tada.includes(e.id))
     let reaction = new Discord.Collection()
-    if (guild.giveaway.medium === `reaction`) {
-        reaction = message.reactions.cache.get(emoji.id).users.cache.filter(user => user.id === client.user.id).map(r => r.id)
-        reaction.forEach(e => giveaway.requirement.push(e))
-    }
+
     if (!giveaway) return { type: `Error`, answer: `No Giveaway with that Message` }
     else {
 

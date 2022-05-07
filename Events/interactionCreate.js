@@ -72,6 +72,7 @@ module.exports = async (client, i) => {
 
             let rr = i.customId.replace(`Giveaway_End_`, ``)
             let m = await Giveaway.findOne({id: rr})
+            if(!m) return
             const row2 = new Discord.MessageActionRow()
                 .addComponents(
                     new Discord.MessageButton()
