@@ -18,7 +18,7 @@ module.exports = {
     category: "utility",
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
-    subcommands: [{name: `start`, description: `Starts a giveaway`, usage: `start [time] [no. of winners] [requirement] [prize]`}, {name: `end`, description: `Ends a giveaway early`, usage: `end [giveaway ID]`}, {name: `reroll`, description: `Reroll winners of a giveaway`, usage: `reroll [giveaway ID]`}, {name: `cancel`, description: `Cancels a giveaway`, usage: `cancel [giveaway ID]`}, {name: `list`, description: `Shows list of active giveaways in the server`, usage: `list` }, {name: `entries`, description: `Check entries of any giveaway`, usage: `entries [giveaway ID]`}, {name: `ping`, description: `Ping the giveaway ping role of the server`, usage: `ping <sponsor> <message>`}],
+    subcommands: [{ name: `start`, description: `Starts a giveaway`, usage: `start [time] [no. of winners] [requirement] [prize]` }, { name: `end`, description: `Ends a giveaway early`, usage: `end [giveaway ID]` }, { name: `reroll`, description: `Reroll winners of a giveaway`, usage: `reroll [giveaway ID]` }, { name: `cancel`, description: `Cancels a giveaway`, usage: `cancel [giveaway ID]` }, { name: `list`, description: `Shows list of active giveaways in the server`, usage: `list` }, { name: `entries`, description: `Check entries of any giveaway`, usage: `entries [giveaway ID]` }, { name: `ping`, description: `Ping the giveaway ping role of the server`, usage: `ping <sponsor> <message>` }],
     //Settings for command
     nsfw: false,
     ownerOnly: false,
@@ -168,7 +168,7 @@ module.exports = {
                     if (!blacklistedroles || blacklistedroles === ``) blacklistedroles = `None`
 
                     let pingrole = `<@&${pingroledata}>`
-                    if(!pingroledata||pingroledata === `none`) pingrole = `None`
+                    if (!pingroledata || pingroledata === `none`) pingrole = `None`
                     const embed2 = new Discord.MessageEmbed()
                         .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
                         .setTitle(`Giveaway Settings`)
@@ -433,28 +433,28 @@ module.exports = {
         } else {
             //Ping
             if (args[0].toLowerCase() === `ping`) {
-                let pingrole = guild.giveaway.pingrole === `none`||!guild.giveaway.pingrole ? `` : `<@&${guild.giveaway.pingrole}>`
+                let pingrole = guild.giveaway.pingrole === `none` || !guild.giveaway.pingrole ? `` : `<@&${guild.giveaway.pingrole}>`
                 const embed2 = new Discord.MessageEmbed()
-                .setAuthor({name: `Error`, iconURL: client.gif.error})
-                .setDescription(`This server don't have any ping role for giveaways yet.\nYou can setup it by using \`${data.prefix}giveaway settings\``)
-                .setColor("RED")
-                if(!args[1]&&pingrole === ``) return message.reply({embeds: [embed2]})
-                if(!args[1]) return message.channel.send(`${pingrole}`)
+                    .setAuthor({ name: `Error`, iconURL: client.gif.error })
+                    .setDescription(`This server don't have any ping role for giveaways yet.\nYou can setup it by using \`${data.prefix}giveaway settings\``)
+                    .setColor("RED")
+                if (!args[1] && pingrole === ``) return message.reply({ embeds: [embed2] })
+                if (!args[1]) return message.channel.send(`${pingrole}`)
                 let msg = args.slice(2).join(` `)
                 let role = message.guild.members.cache.find(r => args[1].includes(r.id))
                 if (!role) msg = args.slice(1).join(` `)
-                if(msg === ``) msg = `None`
+                if (msg === ``) msg = `None`
 
-                 
+
                 let othermessage = ''
-                if(message.guild.id === `738394656211206234`) othermessage = '\nMake sure to thank them in <#774576121500925962> <a:dz_Yayy:787569595325218817>'
+                if (message.guild.id === `738394656211206234`) othermessage = '\nMake sure to thank them in <#774576121500925962> <a:dz_Yayy:787569595325218817>'
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`**__Giveaway Time__**`)
                     .setDescription(`${role ? `**Sponsor**: <@${role.id}>\n` : ``}**Message**: ${msg}${othermessage}`)
                     .setColor(`#00ffff`)
                     .setThumbnail(client.gif.tada)
-                    message.delete()
-                    return message.channel.send({content: pingrole, embeds: [embed]})
+                message.delete()
+                return message.channel.send({ content: pingrole, embeds: [embed] })
 
             }
             //List
@@ -731,8 +731,6 @@ module.exports = {
                     let numberofwinners = parseInt(args[2])
                     let prize = args.slice(4).join(` `)
 
-
-
                     const requirementarray = []
 
                     if (args[3].split(`;`).length > 5) {
@@ -871,7 +869,30 @@ module.exports = {
                             if (e.answer === `No one`) {
                                 m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
                             } else {
-                                m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
+
+                                const row = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                            .setLabel(`Giveaway Link`)
+                                            .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`)
+                                            .setStyle("LINK")
+                                    )
+                                e.answer.forEach(r => {
+                                    const winneruser = client.users.cache.find(h => r.includes(h.id))
+                                    let embed2 = new Discord.MessageEmbed()
+                                        .setTitle(`Congratulation`)
+                                        .setDescription(`You won a giveaway in ${message.guild.name}\nPrize: ${prize}`)
+                                        .setColor("00ffff")
+
+                                    winneruser.send({ embeds: [embed2], components: [row] })
+
+                                })
+                                const embed2p = new Discord.MessageEmbed()
+                                    .setTitle(`Giveaway Ended`)
+                                    .setDescription(`A Giveaway hosted by you has ended\nPrize: ${prize}\nWinners: ${e.answer.join(`, `)}`)
+                                    .setColor("00ffff")
+                                message.author.send({ embeds: [embed2p], components: [row] })
+                                m.channel.send({ content: `Congratulation ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                             }
                             const embed9 = new Discord.MessageEmbed()
                                 .setTitle(`**${prize}**`)
@@ -983,6 +1004,28 @@ module.exports = {
                                     if (e.answer === `No one`) {
                                         m.channel.send({ content: `No one participated in the Giveaway for **${prize}**`, components: [row3] })
                                     } else {
+                                        const row = new Discord.MessageActionRow()
+                                            .addComponents(
+                                                new Discord.MessageButton()
+                                                    .setLabel(`Giveaway Link`)
+                                                    .setURL(`https://discord.com/channels/${m.guild.id}/${m.channel.id}/${m.id}`)
+                                                    .setStyle("LINK")
+                                            )
+                                        e.answer.forEach(r => {
+                                            const winneruser = client.users.cache.find(h => r.includes(h.id))
+                                            let embed2 = new Discord.MessageEmbed()
+                                                .setTitle(`Congratulation`)
+                                                .setDescription(`You won a giveaway in ${message.guild.name}\nPrize: ${prize}`)
+                                                .setColor("00ffff")
+
+                                            winneruser.send({ embeds: [embed2], components: [row] })
+
+                                        })
+                                        const embed2p = new Discord.MessageEmbed()
+                                            .setTitle(`Giveaway Ended`)
+                                            .setDescription(`A Giveaway hosted by you has ended\nPrize: ${prize}\nWinners: ${e.answer.join(`, `)}`)
+                                            .setColor("00ffff")
+                                        message.author.send({ embeds: [embed2p], components: [row] })
                                         m.channel.send({ content: `Congratulations ${e.answer.join(`, `)}! You won the giveaway for **${prize}**`, components: [row2] })
                                     }
                                     let gw = await Giveaway.findOne({ id: m.id })
