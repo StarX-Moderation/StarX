@@ -51,7 +51,7 @@ async function init() {
         client.log.error('Unable to connect to MongoDB Database.\nError: ' + err)
     })
 
-    await client.login(config.token)
+    await client.login(config.testtoken)
 }
 
 init();

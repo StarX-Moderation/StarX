@@ -17,6 +17,8 @@ module.exports = mongoose.model("Guild", new mongoose.Schema({
     },
     premium: false,
     raffle: {type: Array, default: []},
+    appeal: {type: Object, default: {channel: `none`, enabled: false, reason: true}},
+
 
 
 }));

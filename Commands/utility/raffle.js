@@ -308,11 +308,11 @@ module.exports = {
                 if(!winner) winner = `No one`
                 if(!winner.length) winner = `No one`
                 if(winner === ``) winner = `No one`
-
+                collector.stop()
                     await Guild.findOneAndUpdate({id: message.guild.id}, {$set: {raffle: []}})
                     const embed = new Discord.MessageEmbed()
                     .setAuthor(message.guild.name, message.guild.iconURL({dynamic: true}))
-                    .setTitle(`${client.emotes.giveawayemote} Raffle Ended ${client.emotes.giveawayemote}`)
+                    .setTitle(`${client.emotes.tada} Raffle Ended ${client.emotes.tada}`)
                     .setColor(`00E4FF`)
                     .setDescription(`Winning Ticket Number: \`${winningnumber}\`\nWinner(s): ${winner}.\nTotal Entries: \`${raffle.length}\`\nHosted By: <@${guild.raffle[0].host}>`)
                     return message.channel.send({embeds: [embed]}) 
