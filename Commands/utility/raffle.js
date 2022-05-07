@@ -280,7 +280,8 @@ module.exports = {
             let hostedby = '?'
             if(!hostedby) hostedby = ` hosted by <@${guild.raffle[0].host}>?`
             message.channel.send(`Are you sure? Do you want to end raffle${hostedby} Yes/No`, {disableMentions: 'all'})
-            const collector = message.channel.createMessageCollector(r => r.author.id === message.author.id, {time: 50000, max: 1})
+            const filter = r => r.author.id === message.author.id
+            const collector = message.channel.createMessageCollector({filter, time: 50000, max: 1})
             collector.on('collect', async m => {
                 if(m.content.toLowerCase() === `yes`){
 
@@ -317,6 +318,7 @@ module.exports = {
                     .setDescription(`Winning Ticket Number: \`${winningnumber}\`\nWinner(s): ${winner}.\nTotal Entries: \`${raffle.length}\`\nHosted By: <@${guild.raffle[0].host}>`)
                     return message.channel.send({embeds: [embed]}) 
                 } else {
+                    collector.stop()
                     return message.channel.send(`Alright, I ain't ending raffle yet.`)
                 }
             })
