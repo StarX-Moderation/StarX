@@ -334,29 +334,12 @@ module.exports = async (client, i) => {
                 return i.reply({ embeds: [embed], ephemeral: true })
 
             } else {
-                const button = new Discord.MessageButton()
-                    .setEmoji(giveawaymessage.components[0].components[0].emoji)
-                    .setStyle("PRIMARY")
-                    .setLabel(giveaway.participant.length - 1 > 0 ? (giveaway.participant.length - 1).toString() : '')
-                    .setCustomId(`Giveaway_Joining_${giveaway.id}`)
-                    const endbutton = new Discord.MessageButton()
-                    .setLabel(`End`)
-                    .setStyle(`DANGER`)
-                    .setCustomId(`Giveaway_End_${giveaway.id}`)
-                const entrybutton = new Discord.MessageButton()
-                    .setLabel(`Entries`)
-                    .setStyle(`PRIMARY`)
-                    .setCustomId(`Giveaway_Entries_${giveaway.id}`)
-
-                const row = new Discord.MessageActionRow()
-                    .addComponents(button, entrybutton, endbutton)
 
                 await Giveaway.findOneAndUpdate({ id: ee }, { $pull: { participant: i.user.id } })
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`Left Giveaway`)
                     .setDescription(`You left this giveaway, you will not be able to win this giveaway now.`)
                     .setColor("GREEN")
-                giveawaymessage.edit({ components: [row] })
                 return i.reply({ embeds: [embed], ephemeral: true })
             }
         }
@@ -399,25 +382,8 @@ module.exports = async (client, i) => {
                 const reqcheck = await client.tools.giveawayreqcheck(i.member, req, giveaway)
                 i.reply({ embeds: [reqcheck.embed], components: reqcheck.bool === false ? [] : [leavebutton], ephemeral: true })
                 if (reqcheck.bool === true) {
-                    const button2 = new Discord.MessageButton()
-                        .setEmoji(i.message.components[0].components[0].emoji)
-                        .setStyle("PRIMARY")
-                        .setLabel((giveaway.participant.length + 1).toString())
-                        .setCustomId(`Giveaway_Joining_${giveaway.id}`)
-                        const endbutton = new Discord.MessageButton()
-                        .setLabel(`End`)
-                        .setStyle(`DANGER`)
-                        .setCustomId(`Giveaway_End_${giveaway.id}`)
-                    const entrybutton = new Discord.MessageButton()
-                        .setLabel(`Entries`)
-                        .setStyle(`PRIMARY`)
-                        .setCustomId(`Giveaway_Entries_${giveaway.id}`)
-
-                    const row2 = new Discord.MessageActionRow()
-                        .addComponents(button2, entrybutton, endbutton)
 
                     await Giveaway.findOneAndUpdate({ id: giveaway.id }, { $push: { participant: i.member.id.toString() } }, { upsert: true })
-                    i.message.edit({ components: [row2] })
                 }
             }
         }
