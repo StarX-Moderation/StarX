@@ -444,10 +444,15 @@ module.exports = {
                 let role = message.guild.members.cache.find(r => args[1].includes(r.id))
                 if (!role) msg = args.slice(1).join(` `)
                 if(msg === ``) msg = `None`
+
+                let othermessage = '\nMake sure to thank them in <#774576121500925962> <a:dz_Yayy:787569595325218817>'
+
+                if(message.guild.id === `738394656211206234`) othermessage = ``
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`**__Giveaway Time__**`)
-                    .setDescription(`${role ? `**Sponsor**: <@${role.id}>\n` : ``}**Message**: ${msg}`)
+                    .setDescription(`${role ? `**Sponsor**: <@${role.id}>\n` : ``}**Message**: ${msg}${othermessage}`)
                     .setColor(`#00ffff`)
+                    .setThumbnail(client.gif.tada)
                     message.delete()
                     return message.channel.send({content: pingrole, embeds: [embed]})
 
