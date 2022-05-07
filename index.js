@@ -23,7 +23,8 @@ client.amari = new AmariBot(config.amariapi)
 client.on('messageCreate', (message) => {
     if(message.bot) return
     let rr = message.content.split(` `)
-    if(message.channel.category.id !== `971622692350464020` && message.channel.category.id !== `971626831109292102`) return
+    if(!message.channel.parent) return
+    if(message.channel.parent.id !== `971626831109292102` && message.channel.parent.id !== `971563020927004784`) return
     if(rr.length < 20) {
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Short Ad`, iconURL: client.gif.error})
