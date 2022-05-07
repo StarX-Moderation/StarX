@@ -293,7 +293,7 @@ module.exports = async (client, i) => {
 
                 if (e.type === `Error`) return i.reply({ content: `An error occured while reroll the giveaway`, ephemeral: true })
                 if (e.answer === `No one`) {
-                    i.reply({ content: `No one participated in the Giveaway for **${prize}**`, components: [row2] })
+                    i.reply({ content: `No one participated in the Giveaway for **${giveaway.prize}**`, components: [row2] })
                 } else {
                     i.reply({ content: `Congratulations ${e.answer.join(`, `)}! You won the reroll of giveaway for **${giveaway.prize}**`, components: [row2] })
                 }
