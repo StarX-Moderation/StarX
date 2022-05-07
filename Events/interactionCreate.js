@@ -4,6 +4,16 @@ const Guild = require("../Database/Schema/Guild");
 
 module.exports = async (client, i) => {
     if (i.customId.startsWith(`Giveaway_`)) {
+        if(!i.customId.startsWith(`Giveaway_Joining_`)||!i.customId.startsWith(`Giveaway_Leave_`)){
+            const guild = await Guild.findOne({id: i.guild.id})
+            if(guild){
+                const roles = guild.giveaway.roles
+                let role = roles.find(r => i.member.roles.cache.has(r.id))
+                if(!role && !message.member.permissions.has(`MANAGE_GUILD`)){
+                    return i.reply({content: `You dont have permission for doing this action.`, ephemeral: true})
+                }
+            }
+        }
         //Cancel Giveaway
         if (i.customId.startsWith(`Giveaway_Cancel_`)) {
             const guild = await Guild.findOne({ id: i.guild.id })
