@@ -73,6 +73,12 @@ module.exports = async (client, i) => {
             let rr = i.customId.replace(`Giveaway_End_`, ``)
             let m = await Giveaway.findOne({id: rr})
             if(!m) return
+            if(m.ended === true){
+                const embed10 = new Discord.MessageEmbed()
+                .setTitle(`Error`)
+                .setDescription(`This giveaway has ended already`)
+                return i.reply({embeds: [embed10]})
+            }
             const row2 = new Discord.MessageActionRow()
                 .addComponents(
                     new Discord.MessageButton()
