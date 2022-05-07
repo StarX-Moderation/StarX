@@ -167,7 +167,7 @@ module.exports = {
                     blacklistedroles = blacklistedrolesarray.map(r => `\`${r.name}\``).join(`, `)
                     if (!blacklistedroles || blacklistedroles === ``) blacklistedroles = `None`
 
-                    let pingrole = !pingroledata || pingroledata === `none` ? `None` : `<@${pingroledata}>`
+                    let pingrole = !pingroledata || pingroledata === `none` ? `None` : `<@&${pingroledata}>`
                     const embed2 = new Discord.MessageEmbed()
                         .setAuthor({ name: message.guild.name, iconURL: message.guild.iconURL() })
                         .setTitle(`Giveaway Settings`)
