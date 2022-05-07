@@ -445,9 +445,9 @@ module.exports = {
                 if (!role) msg = args.slice(1).join(` `)
                 if(msg === ``) msg = `None`
 
-                let othermessage = '\nMake sure to thank them in <#774576121500925962> <a:dz_Yayy:787569595325218817>'
-
-                if(message.guild.id === `738394656211206234`) othermessage = ``
+                 
+                let othermessage = ''
+                if(message.guild.id === `738394656211206234`) othermessage = '\nMake sure to thank them in <#774576121500925962> <a:dz_Yayy:787569595325218817>'
                 const embed = new Discord.MessageEmbed()
                     .setTitle(`**__Giveaway Time__**`)
                     .setDescription(`${role ? `**Sponsor**: <@${role.id}>\n` : ``}**Message**: ${msg}${othermessage}`)
