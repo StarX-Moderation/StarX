@@ -57,7 +57,8 @@ module.exports = {
                     .setDescription(`${guildid.appeal.reason === true ? `You are Banned for Reason : ${!e.reason ? `No Reason` : e.reason}\nYou can write your appeal now.\n` : `Please Send your appeal.\n`}You can type \`cancel\` to cancel appeal.`)
                     .setColor(`RED`)
                     channel.send({embeds: [embed]})
-                    const collector2 = channel.createMessageCollector(r => message.author.id === r.author.id, {max: 1, time: 1200000})
+                    const filter = r => message.author.id === r.author.id
+                    const collector2 = channel.createMessageCollector({filter, max: 1, time: 1200000})
                     collector2.on('collect', msg => {                        
                         const channel2 = client.channels.cache.find(x => guildid.appeal.channel.includes(x.id))
                         if(!channel2) return channel.send(`Your appeal has been sent! You will have to wait till any Mod in server review it.`)
