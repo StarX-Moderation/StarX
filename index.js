@@ -22,7 +22,7 @@ client.Guild = require(`./Database/Schema/Guild.js`)
 client.amari = new AmariBot(config.amariapi)
 client.on('messageCreate', (message) => {
     if(message.bot) return
-    let rr = message.split(` `)
+    let rr = message.content.split(` `)
     if(message.channel.id !== `972390466773458984`) return
     if(rr.length < 20) {
         message.author.send(`Your message must have atleast 20 words to send message in this channel`)
