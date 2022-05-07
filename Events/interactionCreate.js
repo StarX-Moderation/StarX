@@ -9,7 +9,7 @@ module.exports = async (client, i) => {
             if(guild){
                 const roles = guild.giveaway.roles
                 let role = roles.find(r => i.member.roles.cache.has(r.id))
-                if(!role && !message.member.permissions.has(`MANAGE_GUILD`)){
+                if(!role && !i.member.permissions.has(`MANAGE_GUILD`)){
                     return i.reply({content: `You dont have permission for doing this action.`, ephemeral: true})
                 }
             }
