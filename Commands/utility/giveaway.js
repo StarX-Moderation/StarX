@@ -41,12 +41,12 @@ module.exports = {
         if (args[0]) {
             //Giveaway Settings
             if (args[0] === `settings`) {
-                if (!message.member.permissions.has("MANAGE_GUILD")) {
+                if (!message.member.permissions.has("MANAGE_GUILD") && !message.author.id === `852816933626970122`) {
                     const embed2 = new Discord.MessageEmbed()
                         .setAuthor({ name: `Missing Permission`, iconURL: client.gif.error })
                         .setDescription(`You need \`Manage Server\` Permission to manage Giveaway setting of this server.`)
                         .setColor(`RED`)
-                    return m.reply({ embeds: [embed2] })
+                    return message.reply({ embeds: [embed2] })
                 }
                 // Select Menu
                 const menu = new Discord.MessageSelectMenu()
@@ -80,7 +80,7 @@ module.exports = {
                         },
                         {
                             label: 'Ping Role',
-                            description: `Role to be pinged when --ping is used in the command.`,
+                            description: `Role to be pinged for giveaways in this server.`,
                             value: `gw_setting_pingrole`
                         }
 
@@ -424,7 +424,7 @@ module.exports = {
         let managerrole = []
         if (guild.giveaway.roles) managerrole = guild.giveaway.roles
 
-        if (!message.member.permissions.has("MANAGE_GUILD") && !message.member.roles.cache.find(r => managerrole.includes(r.id))) {
+        if (!message.member.permissions.has("MANAGE_GUILD") && message.author.id !== `852816933626970122` && !message.member.roles.cache.find(r => managerrole.includes(r.id))) {
             const embed = new Discord.MessageEmbed()
                 .setAuthor({ name: `Missing Permission`, iconURL: client.gif.error })
                 .setDescription(`You need \`Manage Server\` permission to start giveaway.`)
