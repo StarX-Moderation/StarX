@@ -69,8 +69,6 @@ module.exports = async(client) => {
                     const row = new Discord.MessageActionRow()
                         .addComponents(button2, button3)
 
-
-
                     function sendgiveaway() {
                         if (medium === `reaction`) return { content: `${client.emotes.tada} **__Giveaway Ended!__** ${client.emotes.tada}`, embeds: [embed9] }
                         else {

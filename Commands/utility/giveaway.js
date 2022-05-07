@@ -915,8 +915,6 @@ module.exports = {
                             .setStyle(`PRIMARY`)
                             .setCustomId(`Giveaway_Entries_${m.id}`)
 
-                        const row20 = new Discord.MessageActionRow()
-                            .addComponents(endbutton, entrybutton)
 
                         const button2 = new Discord.MessageButton()
                             .setEmoji(emoji)
@@ -929,7 +927,6 @@ module.exports = {
 
                         if (medium === `reaction`) {
                             m.react(emoji)
-                            m.edit({ components: [row20] })
                         } else {
                             m.edit({ components: [row2] })
                         }
