@@ -4,7 +4,7 @@ const Guild = require("../Database/Schema/Guild");
 
 module.exports = async (client, i) => {
     if (i.customId.startsWith(`Giveaway_`)) {
-        if(!i.customId.startsWith(`Giveaway_Joining_`)||!i.customId.startsWith(`Giveaway_Leave_`)){
+        if(!i.customId.startsWith(`Giveaway_Joining_`)&&!i.customId.startsWith(`Giveaway_Leave_`)){
             const guild = await Guild.findOne({id: i.guild.id})
             if(guild){
                 const roles = guild.giveaway.roles
