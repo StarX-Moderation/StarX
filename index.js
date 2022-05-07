@@ -23,9 +23,19 @@ client.amari = new AmariBot(config.amariapi)
 client.on('messageCreate', (message) => {
     if(message.bot) return
     let rr = message.content.split(` `)
-    if(message.channel.id !== `972390466773458984`) return
+    if(message.channel.category.id !== `971622692350464020` && message.channel.category.id !== `971626831109292102`) return
     if(rr.length < 20) {
-        message.author.send(`Your message must have atleast 20 words to send message in this channel`)
+        const embed = new Discord.MessageEmbed()
+        .setAuthor({name: `Short Ad`, iconURL: client.gif.error})
+        .setDescription(`Your ad must have atleast 20 words.`)
+        .setColor(`RED`)
+        const embed2 = new Discord.MessageEmbed()
+        .setAuthor({name: `Moderation Log`, iconURL: client.gif.error})
+        .setDescription(`Username: ${message.author.tag}\nChannel: <#${message.channel.id}>\nID: ${message.author.id}\nReason: Ad Shorter than 20 words`)
+        .setColor({embeds: [embed2]})
+        let channel = message.guild.channels.cache.get(`971619282150625300`)
+        channel.send({embeds: [embed2]})
+        message.author.send({embeds: [embed]})
         return message.delete()
     }
 })
