@@ -20,7 +20,15 @@ client.embeds = require(`./Tools/Embeds.js`)
 client.tools = require(`./Tools/Tools.js`)
 client.Guild = require(`./Database/Schema/Guild.js`)
 client.amari = new AmariBot(config.amariapi)
-
+client.on('messageCreate', (message) => {
+    if(message.bot) return
+    let rr = message.split(` `)
+    if(message.channel.id !== `972390466773458984`) return
+    if(rr.length < 20) {
+        message.author.send(`Your message must have atleast 20 words to send message in this channel`)
+        return message.delete()
+    }
+})
 async function init() {
     // Load Discordjs Events
     const eventFiles = fs.readdirSync('./Events/').filter(file => file.endsWith('.js'));
