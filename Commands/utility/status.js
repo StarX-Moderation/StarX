@@ -18,7 +18,7 @@ module.exports = {
 
         if(!args[1]) return client.setActivity(args[0])
         if(args[1]){
-            if(!args[0].toLowerCase() !== `watching` && !args[0].toLowerCase() !== `listening` && !args[0].toLowerCase() === `playing`){
+            if(args[0].toLowerCase() !== `watching` && args[0].toLowerCase() !== `listening` && args[0].toLowerCase() === `playing`){
                 let status = args.join(` `)
                 client.setActivity(status)
             } else {
