@@ -42,7 +42,7 @@ module.exports = {
                     .setColor(`RED`)
                 const embed4 = new Discord.MessageEmbed()
                     .setAuthor({ name: `Moderation Log`, iconURL: client.gif.error })
-                    .setDescription(`**Username**: ${message.author.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${message.author.id}\n**Reason**: Ad Shorter than 20 words`)
+                    .setDescription(`**Username**: ${user.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${user.id}\n**Reason**: ${reason}`)
                     .setColor("RED")
 
                     let channel = message.guild.channels.cache.get(`971619282150625300`)
