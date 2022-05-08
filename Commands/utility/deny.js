@@ -2,7 +2,7 @@ const Discord = require("discord.js")
 
 module.exports = {
 
-    name: "deny",
+    name: "fire",
     usage: ["Get the current ping of the bot```{prefix}ping```"],
     syntax: "ping",
     enabled: true,
@@ -21,12 +21,12 @@ module.exports = {
     async execute(client, message, args, data) {
         const embed5 = new Discord.MessageEmbed()
         .setAuthor({name: `Error`, iconURL: client.gif.error})
-        .setDescription(`You need Manage server permission to deny application.`)
+        .setDescription(`You need Manage server permission to fire someone.`)
         .setColor("RED")
         if(!message.member.permissions.has("MANAGE_GUILD")) return message.reply({embeds: [embed5]})
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Error`, iconURL: client.gif.error})
-        .setDescription(`You have to provide id of the user.\nSyntax: \`${data.prefix}deny [user ID] [department] [reason]\``)
+        .setDescription(`You have to provide id of the user.\nSyntax: \`${data.prefix}fire [user ID] [department] [reason]\``)
         .setColor("RED")
         if(!args[0]) return message.reply({embeds: [embed]})
         else {
