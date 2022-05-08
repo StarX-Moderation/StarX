@@ -76,7 +76,7 @@ client.on("guildMemberUpdate", (oldmember, newmember) => {
         .setTitle(`Thanks for Boosting!`)
         .setDescription(`Thanks for boosting StarX Advertising! We appreciate that you boosted us it help us upgrade our server, Make sure to DM <@969683278598664233> to claim your perks!`)
         .setColor("00ffff")
-        client.channels.cache.get(`972718597631770655`).send({content: `<@${oldmember.user.id}>`, embeds: [embed]})
+        client.channels.cache.get(`972718533727379467`).send({content: `<@${oldmember.user.id}>`, embeds: [embed]})
     }, 5000)
     }
 })
