@@ -31,7 +31,7 @@ module.exports = {
         if(!args[0]) return message.reply({embeds: [embed]})
         else {
             try{
-            const user = await message.guild.users.fetch(args[0])
+            const user = await client.users.fetch(args[0])
             const embed2 = new Discord.MessageEmbed()
             .setAuthor({name: `Success`, iconURL: client.gif.success})
             .setDescription(`You have hired ${user.name} (${user.id})\nMention: <@${user.id}>`)
@@ -40,7 +40,7 @@ module.exports = {
             .setTitle(`Hey!`)
             .setDescription(`I'm StarX Moderation here to tell you that your application has been ||accepted||`)
             .setColor("GREEN")
-            message.reply({embeds: [embed3]})
+            message.reply({embeds: [embed2]})
             return user.send({embeds: [embed3]})
             }catch{
                 const embed4 = new Discord.MessageEmbed()
