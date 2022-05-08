@@ -34,7 +34,7 @@ module.exports = {
             const user = await client.users.fetch(args[0])
             const embed2 = new Discord.MessageEmbed()
             .setAuthor({name: `Success`, iconURL: client.gif.success})
-            .setDescription(`You have hired ${user.name} (${user.id})\nMention: <@${user.id}>`)
+            .setDescription(`You have hired ${user.tag} (${user.id})\nMention: <@${user.id}>`)
             .setColor("GREEN")
             const embed3 = new Discord.MessageEmbed()
             .setTitle(`Hey!`)
