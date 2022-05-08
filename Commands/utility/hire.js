@@ -38,9 +38,16 @@ module.exports = {
             .setColor("GREEN")
             const embed3 = new Discord.MessageEmbed()
             .setTitle(`Hey!`)
-            .setDescription(`I'm here to tell you your message has been ||Accepted!||`)
+            .setDescription(`I'm here to tell you your message has been ||Accepted!||\nJoin the staff server to get your tasks!`)
             .setColor("GREEN")
-            message.reply({embeds: [embed2]})
+            const row = new Discord.MessageActionRow()
+            .addComponents(
+                new Discord.MessageButton()
+                .setStyle("LINK")
+                .setLabel(`Joing Staff Server`)
+                .setURL(`https://discord.gg/hhEuKgQQ`)
+            )
+            message.reply({embeds: [embed2], components: [row]})
             return user.send({embeds: [embed3]})
             }catch{
                 const embed4 = new Discord.MessageEmbed()
