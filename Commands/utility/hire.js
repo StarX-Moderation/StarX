@@ -47,8 +47,8 @@ module.exports = {
                 .setLabel(`Joing Staff Server`)
                 .setURL(`https://discord.gg/hhEuKgQQ`)
             )
-            message.reply({embeds: [embed2], components: [row]})
-            return user.send({embeds: [embed3]})
+            message.reply({embeds: [embed2]})
+            return user.send({embeds: [embed3], components: [row]})
             }catch{
                 const embed4 = new Discord.MessageEmbed()
                 .setAuthor({name: `Error`, iconURL: client.gif.error})
