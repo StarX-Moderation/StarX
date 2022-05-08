@@ -20,10 +20,10 @@ module.exports = {
         if(args[1]){
             if(args[0].toLowerCase() !== `watching` && args[0].toLowerCase() !== `listening` && args[0].toLowerCase() === `playing`){
                 let status = args.join(` `)
-                client.setActivity(status)
+                client.user.setActivity(status)
             } else {
                 let status = args.slice(1).join(` `)
-                client.setActivity(status, {type: args[0].toUpperCase()})
+                client.user.setActivity(status, {type: args[0].toUpperCase()})
             }
         }
 
