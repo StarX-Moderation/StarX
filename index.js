@@ -71,7 +71,7 @@ client.on('messageCreate', (message) => {
     let rr = message.content.split(` `)
     if(!message.channel.parent) return
     if(message.channel.parent.id !== `971626831109292102` && message.channel.parent.id !== `971563020927004784`) return
-    if(rr.length < 20) {
+    if(rr.length < 20 && !message.member.permissions.has("ADMINISTRATOR")) {
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Short Ad`, iconURL: client.gif.error})
         .setDescription(`Your ad must have atleast 20 words.`)
