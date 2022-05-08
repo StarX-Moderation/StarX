@@ -38,7 +38,7 @@ module.exports = {
             .setColor("GREEN")
             const embed3 = new Discord.MessageEmbed()
             .setTitle(`Hey!`)
-            .setDescription(`I'm StarX Moderation here to tell you that your application has been ||accepted||`)
+            .setDescription(`I'm here to tell you your message has been ||Accepted!||`)
             .setColor("GREEN")
             message.reply({embeds: [embed2]})
             return user.send({embeds: [embed3]})
