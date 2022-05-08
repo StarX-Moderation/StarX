@@ -66,6 +66,20 @@ client.on("modalSubmit", async i => {
     }
 })
 
+client.on("guildMemberUpdate", (oldmember, newmember) => {
+    let oldpremium = oldmember.premiumSince
+    let newpremium = newmember.premiumSince
+    if(!oldpremium && newpremium){
+        setTimeout(() => {
+            
+        const embed = new Discord.MessageEmbed()
+        .setTitle(`Thanks for Boosting!`)
+        .setDescription(`Thanks for boosting StarX Advertising! We appreciate that you boosted us it help us upgrade our server, Make sure to DM <@969683278598664233> to claim your perks!`)
+        .setColor("00ffff")
+        client.channels.cache.get(`972718597631770655`).send({content: `<@${oldmember.user.id}>`, embeds: [embed]})
+    }, 5000)
+    }
+})
 client.on('messageCreate', (message) => {
     if(message.author.bot) return
     let rr = message.content.split(` `)
