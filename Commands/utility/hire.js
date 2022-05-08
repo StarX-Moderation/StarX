@@ -23,7 +23,7 @@ module.exports = {
         .setAuthor({name: `Error`, iconURL: client.gif.error})
         .setDescription(`You need Manage server permission to hire someone.`)
         .setColor("RED")
-        if(!message.member.permissions.has("MANAGE_SERVER")) return message.reply({embeds: [embed5]})
+        if(!message.member.permissions.has("MANAGE_GUILD")) return message.reply({embeds: [embed5]})
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Error`, iconURL: client.gif.error})
         .setDescription(`You have to provide id of the user you want to hire. You can't hire nobody\nSyntax: \`${data.prefix}hire [user ID]\``)
