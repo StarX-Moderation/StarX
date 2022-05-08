@@ -60,7 +60,7 @@ client.on("modalSubmit", async i => {
         .setAuthor({name: `Application Send`, iconURL: client.gif.success})
         .setDescription(`Your application has been sent. Kindly wait till someone review it. You will recieve a DM once someone review it.`)
         .setColor("GREEN")
-        await i.deferReply({embeds: [embed2]})
+        await i.deferReply({ephemeral: true})
         i.editReply({embeds: [embed2]})
         client.channels.cache.get(`972744661498208266`).send({embeds: [embed]})
     }
