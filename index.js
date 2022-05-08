@@ -53,8 +53,8 @@ client.on("modalSubmit", async i => {
         .addField(`What is your age?`, i.fields[0].value)
         .addField(`Have you worked in any other server before?`, i.fields[1].value)
         .addField(`Which software do you use for designing?`, i.fields[2].value)
-        if(i.fields[4].value){
-            embed.addField(`Anything else you would like to tell?`, i.fields[4].value)
+        if(i.fields[3].value){
+            embed.addField(`Anything else you would like to tell?`, i.fields[3].value)
         }
         const embed2 = new Discord.MessageEmbed()
         .setAuthor({name: `Application Send`, iconURL: client.gif.success})
