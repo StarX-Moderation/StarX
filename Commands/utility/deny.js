@@ -26,7 +26,7 @@ module.exports = {
         if(!message.member.permissions.has("MANAGE_GUILD")) return message.reply({embeds: [embed5]})
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Error`, iconURL: client.gif.error})
-        .setDescription(`You have to provide id of the user.\nSyntax: \`${data.prefix}hire [user ID]\``)
+        .setDescription(`You have to provide id of the user.\nSyntax: \`${data.prefix}deny [user ID] [department] [reason]\``)
         .setColor("RED")
         if(!args[0]) return message.reply({embeds: [embed]})
         else {
@@ -37,7 +37,8 @@ module.exports = {
             .setDescription(`You have successfully denied application of ${user.tag} (${user.id})`)
             .setColor("GREEN")
             let reason = args.slice(2)
-            let Department = args[0]
+            let Department = args[1]
+            if(!Department) Department = `None`
             if(!reason) reason = `None`
             const embed3 = new Discord.MessageEmbed()
             .setTitle(`Hey!`)
