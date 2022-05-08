@@ -20,6 +20,52 @@ client.embeds = require(`./Tools/Embeds.js`)
 client.tools = require(`./Tools/Tools.js`)
 client.Guild = require(`./Database/Schema/Guild.js`)
 client.amari = new AmariBot(config.amariapi)
+
+client.on("modalSubmit", async i => {
+    if(i.customId.startsWith(`modal_apply_developer`)){
+        const embed = new Discord.MessageEmbed()
+        .setTitle(`Application Recieved`)
+        .setColor("00ffff")
+        .setDescription(`**Position**: Developer\nUser: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
+        .addField(`What is your age?`, i.fields[0].value)
+        .addField(`Have you worked in any other server before?`, i.fields[1].value)
+        .addField(`Which software do you use for coding?`, i.fields[2].value)
+        .addField(`In which languages do you code?`, i.fields[3].value)
+        if(i.fields[4].value){
+            embed.addField(`Anything else you would like to tell?`, i.fields[4].value)
+        }
+        const embed2 = new Discord.MessageEmbed()
+        .setAuthor({name: `Application Send`, iconURL: client.gif.success})
+        .setDescription(`Your application has been sent. Kindly wait till someone review it. You will recieve a DM once someone review it.`)
+        .setColor("GREEN")
+    
+    
+        await i.deferReply({ephemeral: true})
+        i.editReply({embeds: [embed2]})
+        client.channels.cache.get(`972744661498208266`).send({embeds: [embed]})
+    }
+
+    if(i.customId.startsWith(`modal_apply_gfx_designer`)){
+        const embed = new Discord.MessageEmbed()
+        .setTitle(`Application Recieved`)
+        .setColor("00ffff")
+        .setDescription(`**Position**: GFX Designer\nUser: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
+        .addField(`What is your age?`, i.fields[0].value)
+        .addField(`Have you worked in any other server before?`, i.fields[1].value)
+        .addField(`Which software do you use for designing?`, i.fields[2].value)
+        if(i.fields[4].value){
+            embed.addField(`Anything else you would like to tell?`, i.fields[4].value)
+        }
+        const embed2 = new Discord.MessageEmbed()
+        .setAuthor({name: `Application Send`, iconURL: client.gif.success})
+        .setDescription(`Your application has been sent. Kindly wait till someone review it. You will recieve a DM once someone review it.`)
+        .setColor("GREEN")
+        await i.deferReply({embeds: [embed2]})
+        i.editReply({embeds: [embed2]})
+        client.channels.cache.get(`972744661498208266`).send({embeds: [embed]})
+    }
+})
+
 client.on('messageCreate', (message) => {
     if(message.author.bot) return
     let rr = message.content.split(` `)
