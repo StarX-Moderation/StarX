@@ -49,7 +49,7 @@ client.on("modalSubmit", async i => {
         const embed = new Discord.MessageEmbed()
         .setTitle(`Application Recieved`)
         .setColor("00ffff")
-        .setDescription(`**Position**: GFX Designer\nUser: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
+        .setDescription(`**Position**: GFX Designer\n**User**: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
         .addField(`What is your age?`, i.fields[0].value)
         .addField(`Have you worked in any other server before?`, i.fields[1].value)
         .addField(`Which software do you use for designing?`, i.fields[2].value)
