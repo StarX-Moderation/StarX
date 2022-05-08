@@ -35,9 +35,7 @@ module.exports = {
             try {
                 const user = await client.users.fetch(args[0])
                 let reason = args.slice(1).join(` `)
-
-
-
+                await message.delete()
                 const embed = new Discord.MessageEmbed()
                     .setAuthor({ name: `Short Ad`, iconURL: client.gif.error })
                     .setDescription(`Your ad in ${message.guild.name} has been deleted.\nReason: ${reason}.`)
