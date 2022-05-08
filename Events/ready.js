@@ -6,7 +6,22 @@ module.exports = async (client) => {
     client.logger.ready(`Logged in as ${client.user.tag}!`)
     client.user.setPresence({ activity: { name: 'for a!help', type: "WATCHING" }, status: "online" });
 
-
+    const embed = new Discord.MessageEmbed()
+    .setTitle(`Apply for Staff`)
+    .setDescription(`Click on the button of the application for which you want to apply.\nYou will be asked some questions. Answer them and wait for any Admin to review your application`)
+    .setColor("00ffff")
+    const row = new Discord.MessageActionRow()
+    .addComponents(
+        new Discord.MessageButton()
+        .setLabel(`GFX Designer`)
+        .setCustomId(`apply_gfx_designer`)
+        .setStyle("PRIMARY"), 
+        new Discord.MessageButton()
+        .setLabel(`Developer`)
+        .setCustomId(`apply_developer`)
+        .setStyle("PRIMARY")
+    )
+    client.channels.cache.get("972392312871198750").send({embeds: [embed], components: [row]})
     let giveaways = await Giveaway.find({ ended: false })
     giveaways.forEach(async g => {
         let guild = client.guilds.cache.get(g.guild)
