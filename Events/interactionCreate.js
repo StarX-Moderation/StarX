@@ -1,8 +1,92 @@
 const Giveaway = require("../Database/Schema/Giveaway");
 const Discord = require("discord.js");
 const Guild = require("../Database/Schema/Guild");
+const { Modal, TextInputComponent, showModal } = require("discord-modals");
 
 module.exports = async (client, i) => {
+    if(i.customId.startsWith(`apply_`)){
+        if(i.customId === `apply_gfx_designer`){
+            const modal = new Modal()
+            .setTitle(`Apply for Staff`)
+            .setCustomId(`modal_apply_gfx_designer`)
+            .addComponents(
+                new TextInputComponent()
+                .setCustomId(`modal_apply_gfx_designer_question1`)
+                .setLabel(`What is your age?`)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setMaxLength(20)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_gfx_designer_question2`)
+                .setLabel(`Have you worked in any other server before?`)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setMaxLength(200)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_gfx_designer_question3`)
+                .setLabel(`Which softwares do you use for deisgning?`)
+                .setMaxLength(100)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_gfx_designer_question4`)
+                .setLabel(`Anything else you would like to tell?`)
+                .setMaxLength(400)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(false)
+                .setStyle("SHORT"),
+            )
+            showModal(modal, {client, client, interaction: i})
+        }
+
+        if(i.customId === `apply_developer`){
+            const modal = new Modal()
+            .setTitle(`Apply for Staff`)
+            .setCustomId("modal_apply_developer")
+            .addComponents(
+                new TextInputComponent()
+                .setCustomId(`modal_apply_developer_question1`)
+                .setLabel(`What is your age?`)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setMaxLength(20)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_developer_question2`)
+                .setLabel(`Have you worked in any other server before??`)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setMaxLength(200)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_developer_question3`)
+                .setLabel(`Which software do you use for coding?`)
+                .setMaxLength(100)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_developer_question4`)
+                .setLabel(`In which languages do you code?`)
+                .setMaxLength(100)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(true)
+                .setStyle("SHORT"),
+                new TextInputComponent()
+                .setCustomId(`modal_apply_developer_question5`)
+                .setLabel(`Anything else you would like to tell?`)
+                .setPlaceholder(`Write your answer`)
+                .setRequired(false)
+                .setMaxLength(300)
+                .setStyle("SHORT"),
+            )
+            showModal(modal, {client, client, interaction: i})
+        }
+
+    }
     if (i.customId.startsWith(`Giveaway_`)) {
         if(!i.customId.startsWith(`Giveaway_Joining_`)&&!i.customId.startsWith(`Giveaway_Leave_`)){
             const guild = await Guild.findOne({id: i.guild.id})
