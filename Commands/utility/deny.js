@@ -36,11 +36,12 @@ module.exports = {
             .setAuthor({name: `Success`, iconURL: client.gif.success})
             .setDescription(`You have successfully denied application of ${user.tag} (${user.id})`)
             .setColor("GREEN")
-            let reason = args.slice(1)
+            let reason = args.slice(2)
+            let Department = args[0]
             if(!reason) reason = `None`
             const embed3 = new Discord.MessageEmbed()
             .setTitle(`Hey!`)
-            .setDescription(`Hey! I have bad news for you you have been fired from StarX Staff team.\nReason: ${reason}`)
+            .setDescription(`Heads up you have been ||fired|| from StarX ||staff team||!\n**Reason**: ${reason}\n**Department**: ${Department}`)
             .setColor("RED")
 
             message.reply({embeds: [embed2]})
