@@ -44,7 +44,7 @@ module.exports = {
             .addComponents(
                 new Discord.MessageButton()
                 .setStyle("LINK")
-                .setLabel(`Joing Staff Server`)
+                .setLabel(`Join Staff Server`)
                 .setURL(`https://discord.gg/hhEuKgQQ`)
             )
             message.reply({embeds: [embed2]})
