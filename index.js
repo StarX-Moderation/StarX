@@ -27,50 +27,6 @@ client.on("guildMemberAdd", (member) => {
     return client.channels.cache.get(`972621289221144677`).send({content: `Welcome To StarX Advertising <@${member.user.id}>\n\n**__Make sure to check out__** \n\n<#969397959810756618>\n<#971600093344055316>\n<#971570961654612018>`})
     }
 })
-client.on("modalSubmit", async i => {
-    if(i.customId.startsWith(`modal_apply_developer`)){
-        const embed = new Discord.MessageEmbed()
-        .setTitle(`Application Recieved`)
-        .setColor("00ffff")
-        .setDescription(`**Position**: Developer\nUser: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
-        .addField(`What is your age?`, i.fields[0].value)
-        .addField(`Have you worked in any other server before?`, i.fields[1].value)
-        .addField(`Which software do you use for coding?`, i.fields[2].value)
-        .addField(`In which languages do you code?`, i.fields[3].value)
-        if(i.fields[4].value){
-            embed.addField(`Anything else you would like to tell?`, i.fields[4].value)
-        }
-        const embed2 = new Discord.MessageEmbed()
-        .setAuthor({name: `Application Send`, iconURL: client.gif.success})
-        .setDescription(`Your application has been sent. Kindly wait till someone review it. You will recieve a DM once someone review it.`)
-        .setColor("GREEN")
-    
-    
-        await i.deferReply({ephemeral: true})
-        i.editReply({embeds: [embed2]})
-        client.channels.cache.get(`972744661498208266`).send({embeds: [embed]})
-    }
-
-    if(i.customId.startsWith(`modal_apply_gfx_designer`)){
-        const embed = new Discord.MessageEmbed()
-        .setTitle(`Application Recieved`)
-        .setColor("00ffff")
-        .setDescription(`**Position**: GFX Designer\n**User**: ${i.member.user.tag} \`(${i.member.user.id})\`\n**Answers**:`)
-        .addField(`What is your age?`, i.fields[0].value)
-        .addField(`Have you worked in any other server before?`, i.fields[1].value)
-        .addField(`Which software do you use for designing?`, i.fields[2].value)
-        if(i.fields[3].value){
-            embed.addField(`Anything else you would like to tell?`, i.fields[3].value)
-        }
-        const embed2 = new Discord.MessageEmbed()
-        .setAuthor({name: `Application Send`, iconURL: client.gif.success})
-        .setDescription(`Your application has been sent. Kindly wait till someone review it. You will recieve a DM once someone review it.`)
-        .setColor("GREEN")
-        await i.deferReply({ephemeral: true})
-        i.editReply({embeds: [embed2]})
-        client.channels.cache.get(`972744661498208266`).send({embeds: [embed]})
-    }
-})
 
 client.on("guildMemberUpdate", (oldmember, newmember) => {
     let oldpremium = oldmember.premiumSince
@@ -92,17 +48,23 @@ client.on('messageCreate', (message) => {
     if(!message.channel.parent) return
     if(message.channel.parent.id !== `971626831109292102` && message.channel.parent.id !== `971563020927004784`) return
     if(rr.length < 20 && !message.member.permissions.has("ADMINISTRATOR")) {
+        const Guild = require("./Database/Schema/Guild.js")
+        const guild = await Guild.findOne({id: message.guild.id})
+        let adcases = guild.adcases
         const embed = new Discord.MessageEmbed()
         .setAuthor({name: `Short Ad`, iconURL: client.gif.error})
         .setDescription(`Your ad must have atleast 20 words.`)
         .setColor(`RED`)
         const embed2 = new Discord.MessageEmbed()
         .setAuthor({name: `Moderation Log`, iconURL: client.gif.error})
-        .setDescription(`**Username**: ${message.author.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${message.author.id}\n**Reason**: Ad Shorter than 20 words`)
+        .adcases(`Case #${adcases}`)
+        .setDescription(`**Username**: ${message.author.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${message.author.id}\n**Reason**: Ad Shorter than 20 words\n\nCheck out <#971626633918283806> for help on how to advertise.`)
         .setColor("RED")
         let channel = message.guild.channels.cache.get(`971619282150625300`)
         channel.send({embeds: [embed2]})
         message.author.send({embeds: [embed]})
+        await Guild.findOneAndUpdate({id: message.guild.id}, {$set: {adcases: adcases+1}})            
+
         return message.delete()
     }
 })

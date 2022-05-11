@@ -3,14 +3,14 @@ const Discord = require("discord.js")
 module.exports = {
 
     name: "ad",
-    usage: ["Get the current ping of the bot```{prefix}ping```"],
+    usage: ["Log the deletion of an ad."],
     syntax: "ping",
+    usage: `ad [user ID] [reason]`,
     enabled: true,
     aliases: [],
-    category: "utility",
+    category: "moderation",
     memberPermissions: [],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
-    subcommands: [{ name: `start`, description: `Starts a giveaway`, usage: `start [time] [no. of winners] [requirement] [prize]` }, { name: `end`, description: `Ends a giveaway early`, usage: `end [giveaway ID]` }, { name: `reroll`, description: `Reroll winners of a giveaway`, usage: `reroll [giveaway ID]` }, { name: `cancel`, description: `Cancels a giveaway`, usage: `cancel [giveaway ID]` }, { name: `list`, description: `Shows list of active giveaways in the server`, usage: `list` }, { name: `entries`, description: `Check entries of any giveaway`, usage: `entries [giveaway ID]` }, { name: `ping`, description: `Ping the giveaway ping role of the server`, usage: `ping <sponsor> <message>` }],
     //Settings for command
     nsfw: false,
     ownerOnly: false,
@@ -40,13 +40,18 @@ module.exports = {
                     .setAuthor({ name: `Short Ad`, iconURL: client.gif.error })
                     .setDescription(`Your ad in ${message.guild.name} has been deleted.\nReason: ${reason}.`)
                     .setColor(`RED`)
+                    const Guild = require("./../../Database/Schema/Guild")
+                    const guild = await Guild.findOne({id: message.guild.id})
+                    let adcases = guild.adcases
                 const embed4 = new Discord.MessageEmbed()
                     .setAuthor({ name: `Moderation Log`, iconURL: client.gif.error })
-                    .setDescription(`**Moderator**: ${message.author.tag}\n**Username**: ${user.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${user.id}\n**Reason**: ${reason}`)
+                    .setTitle(`Case #${adcases}`)
+                    .setDescription(`**Moderator**: ${message.author.tag}\n**Username**: ${user.tag}\n**Channel**: <#${message.channel.id}>\n**ID**: ${user.id}\n**Reason**: ${reason}\n\nCheck out <#971626633918283806> for help on how to advertise.`)
                     .setColor("RED")
 
                     let channel = message.guild.channels.cache.get(`971619282150625300`)
-                    channel.send({embeds: [embed4]})            
+                    channel.send({embeds: [embed4]})
+                    await Guild.findOneAndUpdate({id: message.guild.id}, {$set: {adcases: adcases+1}})            
                 return user.send({ embeds: [embed]})
             } catch {
                 const embed4 = new Discord.MessageEmbed()
