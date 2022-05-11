@@ -42,7 +42,7 @@ client.on("guildMemberUpdate", (oldmember, newmember) => {
     }, 5000)
     }
 })
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
     if(message.author.bot) return
     let rr = message.content.split(` `)
     if(!message.channel.parent) return
