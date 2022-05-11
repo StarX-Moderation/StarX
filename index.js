@@ -24,7 +24,7 @@ client.amari = new AmariBot(config.amariapi)
 client.on("guildMemberAdd", (member) => {
     if(member.guild.id !== `969394778728988692`) return 
     else {
-    return client.channels.cache.get(`972621289221144677`).send({content: `Welcome To StarX Advertising <@${member.user.id}>\n\nMake sure to check out \n<#969397959810756618>\n<#971600093344055316>\n<#971570961654612018>`})
+    return client.channels.cache.get(`972621289221144677`).send({content: `Welcome To StarX Advertising <@${member.user.id}>\n\n**__Make sure to check out__** \n<#969397959810756618>\n<#971600093344055316>\n<#971570961654612018>`})
     }
 })
 client.on("modalSubmit", async i => {
