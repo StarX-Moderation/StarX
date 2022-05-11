@@ -36,7 +36,7 @@ module.exports = {
             .setAuthor({name: `Success`, iconURL: client.gif.success})
             .setDescription(`You have successfully denied application of ${user.tag} (${user.id})`)
             .setColor("GREEN")
-            let reason = args.slice(2)
+            let reason = args.slice(2).join(` `)
             let Department = args[1]
             if(!Department) Department = `None`
             if(!reason) reason = `None`
