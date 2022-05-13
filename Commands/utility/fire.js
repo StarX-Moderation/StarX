@@ -3,7 +3,7 @@ const Discord = require("discord.js")
 module.exports = {
 
     name: "fire",
-    usage: ["Get the current ping of the bot```{prefix}ping```"],
+    usage: ["Fire someone from staff."],
     syntax: "ping",
     enabled: true,
     aliases: [],

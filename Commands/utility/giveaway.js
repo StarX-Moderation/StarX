@@ -11,8 +11,8 @@ const fetch = require("node-fetch");
 module.exports = {
 
     name: "giveaway",
-    usage: ["Get the current ping of the bot```{prefix}ping```"],
-    syntax: "ping",
+    usage: ["Create and manage giveaways."],
+    syntax: "g [arguement]",
     enabled: true,
     aliases: ['g'],
     category: "utility",

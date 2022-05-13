@@ -1,11 +1,11 @@
 module.exports = {
     name: "status",
-    usage: ["Get the current ping of the bot```{prefix}ping```"],
+    usage: ["Change Status of Bot"],
     syntax: "ping",
     enabled: true,
     aliases: [],
     category: "utility",
-    memberPermissions: [],
+    memberPermissions: ["MANAGE_GUILD"],
     botPermissions: ["SEND_MESSAGES", "EMBED_LINKS"],
     //Settings for command
     nsfw: false,
